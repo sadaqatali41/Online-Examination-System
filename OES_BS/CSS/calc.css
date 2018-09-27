@@ -1,0 +1,43 @@
+#clear{
+	background-color:red;
+}
+#result{
+	background-color:cyan;
+}
+#dot{
+	color:#008000;
+	background-color:#CAE00D;
+}
+.number{
+	color:purple;
+	background-color:#FF9966;
+}
+.arith{
+	color:#CAE00D;
+	background-color:#318CE7;
+}
+.trig{
+	color:#0000FF;
+	background-color:#B5A642;
+}
+.exp{
+	color:#004225;
+	background-color:#FF007F;
+}
+.log{
+	color:magenta;
+	text-align: left;
+	background-color:#ACE1AF;
+}
+.pow{
+	color:#E03C31;
+	background-color:#7FFF00;
+}
+.root{
+	color:white;
+	background-color:#002E63;
+}
+.common{
+	color:white;
+	background-color:#3D2B1F;
+}

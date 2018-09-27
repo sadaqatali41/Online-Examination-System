@@ -1,0 +1,121 @@
+h2{
+	color: linen;
+	margin-top: 0;
+	font-size: 28px;
+	font-style: italic;
+	text-decoration: underline;
+	text-align: center;
+	background-color: purple;
+	border: 2px dotted red;
+	border-radius: 10px;
+}
+div#menu
+{
+	margin: auto;
+	margin-top: 8px;
+	width: 50%;
+	height: 520px;
+	background-image: url("../images/menu.jpg");
+	border: 2px solid black;
+	border-radius: 10px;
+	
+}
+div#menu > div
+{
+	margin-top:200px;
+}
+div.common{
+	margin-left: 24%;
+	width:180px;
+	height:180px;
+	text-align:center;
+	border:4px dashed #013220;
+	border-radius: 10px;
+	position:absolute;
+}
+.course{
+	background-color:#C9FFE5;
+	z-index:0;
+	left:30px;
+	top:50px;
+}
+.questions{
+	background-color:#C46210;
+	z-index:1;
+	left:60px;
+	top:100px;
+}
+.city{
+	background-color:#9400D3;
+	z-index:2;
+	left:90px;
+	top:150px;
+}
+.records{
+	background-color:#FFBF00;
+	z-index:3;
+	left:120px;
+	top:200px;
+}
+.examgiven{
+	background-color:#004225;
+	z-index:4;
+	left:150px;
+	top:250px;
+}
+.signup{
+	background-color:#00BFFF;
+	z-index:5;
+	left:180px;
+	top:300px;
+}
+.viewcourse{
+	background-color: pink;
+	z-index:6;
+	left:320px;
+	top:50px;
+}
+.viewcenter{
+	background-color: #CD9575;
+	z-index:7;
+	left:350px;
+	top:100px;	
+}
+.viewquestion{
+	background-color: #3B444B;
+	z-index:8;
+	left:380px;
+	top:150px;		
+}
+.viewselectwaiting{
+	background-color: #999afb;
+	z-index:9;
+	left:410px;
+	top:200px;
+}
+.searchstudents{
+	background-color: #FF9966;
+	z-index:10;
+	left:440px;
+	top:250px;	
+}
+.searchtable{
+	background-color: lightgray;
+	z-index:11;
+	left:470px;
+	top:300px;
+}
+a{
+	font-size: 24px;
+	font-style: italic;
+	font-weight: bold;
+	text-decoration:none;
+	color:black;
+}
+a:hover{
+	color:red;
+	text-decoration:underline;
+}
+a:active{
+	color:#66FF00;
+}

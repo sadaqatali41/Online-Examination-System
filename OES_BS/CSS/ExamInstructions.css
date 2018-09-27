@@ -1,0 +1,43 @@
+h1{
+	text-align:center;
+	font-size:35px;
+	font-family:Castellar;
+	font-style:italic;
+	font-weight:bold;
+	color:red;
+	text-decoration:underline;
+	line-height:80px;
+}
+div#header{
+	height:130px;
+	margin:0px;
+	padding:0px;
+	width:auto;
+	background-color:pink;
+	border:2px solid yellow;
+}
+img#left{
+	height:130px;
+	width:260px;
+	float:left; 
+}
+img#right{
+	height:130px;
+	width:260px;
+	float:right; 
+}
+div#ExamInstructions{
+	max-width: 600px;
+	max-height: 490px;
+	background-color: cyan;
+	color: black;
+	margin: auto;
+	margin-top: .5%;
+	padding: 7px;
+	border-left: 2px dotted red;
+	overflow-y: scroll;
+}
+p,li{
+	font-size: 17px;
+	text-align: justify;
+}

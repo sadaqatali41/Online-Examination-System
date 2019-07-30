@@ -1,0 +1,67 @@
+h1{
+	text-align:center;
+	font-size:35px;
+	font-family:Castellar;
+	font-style:italic;
+	font-weight:bold;
+	color:red;
+	text-decoration:underline;
+	line-height:80px;
+}
+div#header{
+	height:130px;
+	margin:0px;
+	padding:0px;
+	width:auto;
+	background-color:pink;
+	border:2px solid yellow;
+}
+img#left{
+	height:130px;
+	width:260px;
+	float:left; 
+}
+img#right{
+	height:130px;
+	width:260px;
+	float:right; 
+}
+div#ExamSchedule{
+	background-image: url("../images/calc.jpg"); ;
+	width:55%;
+	padding: 1%;
+	margin: auto;
+	margin-top: 1%;
+	border: 5px inset cyan;
+	border-radius: 10px;
+}
+table{
+	border-collapse: collapse;
+}
+table,th,td{
+	border: 2px solid black;
+	text-align: center;
+}
+th.ES{
+	background-color: linen;
+	color: green;
+	font-style: italic;
+	font-size: 24px;
+	border: 2px solid black;
+}
+tr.courses_informations{
+	text-align: center;
+	background-color: cyan;
+	color: purple;
+	font-style: italic;
+	font-size: 20px;
+	border: 2px solid maroon;
+	border-top: none;
+}
+tr.btech{
+	background-color: magenta;
+	font-size: 16px;
+	font-weight: bold;
+	border: 2px solid yellow;
+	border-top: none;
+}

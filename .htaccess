@@ -1,0 +1,53 @@
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^home?$ home.php
+RewriteRule ^student-course-login?$ StudentCourseLogin.php
+RewriteRule ^about-us?$ aboutus.php
+RewriteRule ^admin-login?$ adminlogin.php
+RewriteRule ^sign-up?$ registration.php
+RewriteRule ^exam-login?$ login.php
+RewriteRule ^admin-dashboard?$ welcomadmin.php
+RewriteRule ^log-out?$ signout.php
+RewriteRule ^add-course?$ addcourse.php
+RewriteRule ^add-center?$ addcity.php
+RewriteRule ^add-question?$ addquestion.php
+RewriteRule ^upload-question?$ upload_question.php
+RewriteRule ^view-course?$ ViewCourse.php
+RewriteRule ^view-center?$ ViewCenter.php
+RewriteRule ^view-questions?$ ViewQuestions.php
+RewriteRule ^student-registrations?$ viewrecords.php
+RewriteRule ^attended-exam?$ examgiven.php
+RewriteRule ^exam-results?$ Select_Waiting.php
+RewriteRule ^search-by-courses?$ search_by_course.php
+RewriteRule ^search-by-tables?$ search_by_table.php
+RewriteRule ^exam-schedule?$ Examschedule.php
+RewriteRule ^eligibility-criteria?$ Eligibility_Criteria.php
+RewriteRule ^pg-registration?$ PGForm.php
+RewriteRule ^pg-dashboard?$ PGDataSuccessfullyInserted.php
+RewriteRule ^ug-registration?$ UGForm.php
+RewriteRule ^ug-dashboard?$ UGDataSuccessfullyInserted.php
+RewriteRule ^student-sign-out?$ StudentSignOut.php
+RewriteRule ^print-admit-card?$ PrintAdmitCard.php
+RewriteRule ^final-result?$ FinalResult.php
+RewriteRule ^student-ug-info?$ StudentUgInfo.php
+RewriteRule ^student-pg-info?$ StudentPgInfo.php
+RewriteRule ^forget-password-one?$ forgetpass1.php
+RewriteRule ^email-otp?$ emailotp.php
+RewriteRule ^forget-password-two?$ forgetpass2.php
+RewriteRule ^welcome-to-exam?$ WelcomeToExam.php
+RewriteRule ^exam-instruction?$ ExamInstruction.php
+
+RewriteRule ^admin-actions/([0-9]+)/([0-9]+)?$ admin_actions.php?course_id=$1&course_status=$1
+
+RewriteRule ^admin-actions/([0-9]+)/([0-9]+)?$ admin_actions.php?center_id=$1&center_status=$1
+
+
+
+
+
+
+
+

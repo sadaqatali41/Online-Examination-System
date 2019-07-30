@@ -1,0 +1,6 @@
+make one folder named as 'OES_BS' and store all files in that folder and open browser and type 'localhost/OES_BS/home'
+thanks & Regards
+
+Sadaqat Ali
+Shadab Alam
+Saadat Karim 

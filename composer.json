@@ -1,0 +1,6 @@
+{
+	"require": {
+        "tecnickcom/tc-lib-barcode": "^1.15"
+    }
+}
+

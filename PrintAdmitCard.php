@@ -8,9 +8,13 @@ if(!isset($_SESSION['admitcard']))
 else
 {
 
+require ('vendor/autoload.php');
+$barcode = new Com\Tecnick\Barcode\Barcode();
+$targetPath = "qr-code/";
+
 $con=mysqli_connect('localhost','root');
 mysqli_select_db($con,'online_examination_system');
-			$q="select s.email,s.gender,s.phone,c.address,c.center_code,s.course from students s,center c where s.stuid='$_SESSION[studentid]'
+			$q="select s.email,s.gender,s.phone,c.address,c.center_code,s.course,s.dob from students s,center c where s.stuid='$_SESSION[studentid]'
 					 && c.name='$_SESSION[center]'";
 $result=mysqli_query($con,$q);
 $rec=mysqli_fetch_array($result);
@@ -19,6 +23,32 @@ $query="select exam_date,exam_time from examschedule where course_name='$_SESSIO
 $rs=mysqli_query($con,$query);
 mysqli_close($con);
 $row=mysqli_fetch_array($rs);
+
+// QR generation code
+$data = '';
+$data .= "Regis No.: ".substr($rec['phone'].$_SESSION['studentid'],5,10)."\n";
+$data .= "Name: ".ucfirst($_SESSION['fname'])." ".ucfirst($_SESSION['lname'])."\n";
+$data .= "DOB(yyyy-mm-dd): ".$rec['dob']."\n";
+$data .= "Mobile Number: ".$rec['phone']."\n";
+$data .= "Email Address: ".$rec['email']."\n";
+$data .= "Course: ".$_SESSION['course'].", Center Name: ".$_SESSION['center']."\n";
+$data .= "Exam Date: ".$row['exam_date'].", Exam Time: ".$row['exam_time']."\n";
+    
+if (! is_dir($targetPath)) 
+{
+    mkdir($targetPath, 0777, true);
+}
+$bobj = $barcode->getBarcodeObj('QRCODE,H', $data, - 16, - 16, 'black', array(
+        - 2,
+        - 2,
+        - 2,
+        - 2
+    ))->setBackgroundColor('#f0f0f0');
+    
+    $imageData = $bobj->getPngData();
+    $timestamp = time();
+    
+    file_put_contents($targetPath . $timestamp . '.png', $imageData);
 
 ?>
 
@@ -64,6 +94,8 @@ $row=mysqli_fetch_array($rs);
 			
 			document.getElementById('last_row').style.display="none";
 			document.getElementsByClassName('row')[0].style.display="none";
+			document.getElementsByTagName('footer')[0].style.display="none";
+			document.getElementsByTagName('nav')[0].style.display="none";
 			window.print();
 		}
 	</script>
@@ -118,11 +150,15 @@ $row=mysqli_fetch_array($rs);
 			<td colspan="3">
 				<img src="images/manuulogo.jpg" class="img-rounded" />
 			</td>
-			<th><span style="font-size: 18px;font-style: italic;">Serial No.</span> <?php echo substr($rec['phone'].$_SESSION['studentid'],5,10); ?></th>
+			<!-- <th><span style="font-size: 18px;font-style: italic;">Serial No.</span> <?php echo substr($rec['phone'].$_SESSION['studentid'],5,10); ?></th> -->
+			<td>
+				<img src="<?php echo $targetPath . $timestamp ; ?>.png" width="150px"height="150px">
+			</td>
 		</tr>
 		<tr class="success">
 			<th style="font-size: 18px;" class="text-center">Center Code: <?php echo $rec['center_code']; ?></th>
-			<th colspan="3" style="font-size: 18px;" class="text-center">Student Admit Card</th>
+			<th colspan="2" style="font-size: 18px;" class="text-center">Student Admit Card</th>
+			<th><span style="font-size: 18px;font-style: italic;">R.No.</span> <?php echo substr($rec['phone'].$_SESSION['studentid'],5,10); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -203,7 +239,7 @@ $row=mysqli_fetch_array($rs);
 	</tbody>
 </table>
 </div>
-	</div>
+</div>
 	<?php include 'footer.php'; ?>
 </body>
 </html>

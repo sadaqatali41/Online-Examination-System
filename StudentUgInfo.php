@@ -16,6 +16,36 @@ $rec=mysqli_fetch_array($res);
 $rec1=mysqli_fetch_array($res1);
 $rec2=mysqli_fetch_array($res2);
 
+require ('vendor/autoload.php');
+$barcode = new Com\Tecnick\Barcode\Barcode();
+$targetPath = "qr-code/";
+	// QR generation code
+$data = '';
+$data .= "Regis No.: ".substr($rec['phone'].$_SESSION['studentid'],5,10)."\n";
+$data .= "Name: ".ucfirst($_SESSION['fname'])." ".ucfirst($_SESSION['lname'])."\n";
+$data .= "DOB(yyyy-mm-dd): ".$rec['dob']."\n";
+$data .= "Mobile Number: ".$rec['phone']."\n";
+$data .= "Email Address: ".$rec['email']."\n";
+$data .= "Course: ".$_SESSION['course']."\n";
+$data .= "High School %: ".$rec1['percent'].", YOP: " .$rec1['yop']."\n";
+$data .= "Intermediate %: ".$rec2['percent'].", YOP: " .$rec2['yop']."\n";
+    
+if (! is_dir($targetPath)) 
+{
+    mkdir($targetPath, 0777, true);
+}
+$bobj = $barcode->getBarcodeObj('QRCODE,H', $data, - 16, - 16, 'black', array(
+        - 2,
+        - 2,
+        - 2,
+        - 2
+    ))->setBackgroundColor('#f0f0f0');
+    
+    $imageData = $bobj->getPngData();
+    $timestamp = time();
+    
+    file_put_contents($targetPath . $timestamp . '.png', $imageData);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,6 +62,8 @@ $rec2=mysqli_fetch_array($res2);
 		{
 			document.getElementsByClassName('row')[0].style.display="none";
 			document.getElementById('last_row').style.display="none";
+			document.getElementsByTagName('footer')[0].style.display="none";
+			document.getElementsByTagName('nav')[0].style.display="none";
 			window.print();
 		}
 	</script>
@@ -74,10 +106,14 @@ $rec2=mysqli_fetch_array($res2);
 			<td colspan="4">
 				<img src="images/manuulogo.jpg" id="home" class="img-rounded" />
 			</td>
-			<th colspan="2"><span style="font-size: 18px;font-style: italic;">Serial No.</span> <?php echo substr($rec['phone'].$_SESSION['studentid'],5,10); ?></th>
+			<!-- <th colspan="2"><span style="font-size: 18px;font-style: italic;">Serial No.</span> <?php echo substr($rec['phone'].$_SESSION['studentid'],5,10); ?></th> -->
+			<td colspan="2">
+				<img src="<?php echo $targetPath . $timestamp ; ?>.png" width="150px"height="150px">
+			</td>
 		</tr>
 		<tr class="warning">
-			<th colspan="6" style="font-size: 20px;font-style: italic;" class="text-center text-primary">Personal Details</th>
+			<th colspan="4" style="font-size: 20px;font-style: italic;" class="text-center text-primary">Personal Details</th>
+			<th colspan="2"><span style="font-size: 18px;font-style: italic;">R.No.</span> <?php echo substr($rec['phone'].$_SESSION['studentid'],5,10); ?></th>
 		</tr>
 		<tr>
 			<th>First Name</th>
@@ -146,7 +182,5 @@ $rec2=mysqli_fetch_array($res2);
 	</table>
 
 </div>
-	</div>
-	<?php include 'footer.php'; ?>
-</body>
-</html>
+</div>
+<?php include 'footer.php'; ?>

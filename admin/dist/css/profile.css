@@ -1,0 +1,51 @@
+.profile-content .profile_card{
+    font-size: 120%;
+    font-family: josefin_sans;
+    box-shadow: 3px 3px 10px var(--colorLight);
+    background-color: var(--colorWhite);
+    border-radius: .3em;
+    border-top: 3px solid var(--colorDark);
+}
+.profile-content .profile_card .personal,
+.profile-content .profile_card .general,
+.profile-content .profile_card .contact{
+    padding: 5px 0;
+}
+.profile-content .profile_card h4{
+    text-decoration: underline;
+    font-size: 150%;
+    padding-bottom: .3em;
+}
+.profile-content .profile_card h4,
+.profile-content .profile_card label{
+    font-weight: 600;
+    color: var(--colorDark);
+}
+.profile-content .profile_card .field-group{
+    padding-bottom: 6px!important;
+}
+.profile-content .pic-section .pic-card{
+    padding: 10px 20px;
+    border-radius: .3em;
+    background-color: var(--colorWhite);
+    box-shadow: 0 0 10px var(--colorLight);
+    border-top: 3px solid var(--colorDark)
+}
+.profile-content .pic-section img{
+    width: 100%;
+}
+.profile-content .pic-section .change{
+    font-size: 1.5em;
+    text-align: center;
+    padding: 5px;
+}
+.profile-content .pic-section .change label,
+.profile-content .pic-section .change i{
+    color: var(--colorPrimary);
+    font-weight: 400;
+    cursor: pointer;
+}
+.profile-content .pic-section .change a:hover{
+    color: var(--colorDark);
+    text-decoration: underline;
+}

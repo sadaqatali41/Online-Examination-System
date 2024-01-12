@@ -1,0 +1,193 @@
+:root {
+  --colorPrimary: #236e2f;
+  --colorWhite: #ffffff;
+  --colorDark: #184920;
+  --colorLight: #dcffe2;
+  --colorLightest: #ecffef;
+}
+.bg-primary, .btn-primary{
+  background-color: var(--colorPrimary)!important;
+  background: var(--colorPrimary)!important;
+}
+.text-primary{
+  color: var(--colorPrimary)!important;
+}
+/*------------------*/
+/*      NAVBAR      */
+/*------------------*/
+.main-header {
+  box-shadow: 0 0 10px rgb(175, 175, 175) !important;
+}
+.main-header .logo,
+.main-header .navbar {
+  background-color: var(--colorPrimary) !important;
+  color: var(--colorWhite) !important;
+}
+.main-header .navbar a {
+  color: var(--colorWhite) !important;
+}
+.main-header .navbar a:hover {
+  background: var(--colorDark) !important;
+}
+.main-header h3 {
+  font-size: 150%;
+}
+
+/*------------------*/
+/*       MODAL      */
+/*------------------*/
+.modal .modal-body thead th {
+  background: var(--colorPrimary);
+  color: var(--colorWhite);
+}
+
+/*------------------*/
+/*      FOOTER      */
+/*------------------*/
+footer a {
+  color: var(--colorPrimary);
+}
+footer a:hover,
+footer a:focus {
+  color: var(--colorDark);
+}
+footer .pull-right {
+  color: var(--colorPrimary);
+  font-size: 120%;
+}
+
+.content-wrapper {
+  background: var(--colorLightest);
+}
+.info-box {
+  box-shadow: -2px 2px 10px rgb(190, 190, 190);
+}
+.info-box-icon {
+  background: var(--colorPrimary) !important;
+  color: var(--colorWhite) !important;
+  border: 0;
+  transition: 0.2s;
+}
+.info-box-icon i {
+  transition: 0.2s;
+}
+.info-box:hover .info-box-icon {
+  background: var(--colorLight) !important;
+  color: var(--colorPrimary) !important;
+  border-right: 1px solid var(--colorPrimary);
+}
+.info-box:hover .info-box-icon i {
+  transform: scale(1.15);
+  animation: spin 2s infinite linear;
+  animation-delay: 0.5s;
+}
+.info-box:hover .info-box-icon .fa-shield,
+.info-box:hover .info-box-icon .fa-industry,
+.info-box:hover .info-box-icon .fa-exclamation-circle {
+  transform: scale(1.15);
+  animation: scale 1s infinite linear;
+  animation-delay: 0.5s;
+}
+.info-box:hover .info-box-icon .fa-flag {
+  transform: scale(1.15);
+  animation: wave 1s infinite linear;
+  animation-delay: 0.5s;
+}
+.info-box:hover .info-box-icon .fa-paper-plane {
+  transform: scale(1.15);
+  animation: wave 1s infinite linear;
+  animation-delay: 0.5s;
+}
+.info-box:hover .info-box-icon .fa-level-up {
+  transform: scale(1.15) translateY(0);
+  animation: up-down 1s infinite linear;
+  animation-delay: 0.5s;
+}
+.info-box:hover .info-box-icon .fa-level-down {
+  transform: scale(1.15) translateY(0);
+  animation: down-up 1s infinite linear;
+  animation-delay: 0.5s;
+}
+.info-box .info-button {
+  position: absolute;
+  bottom: 22px;
+  right: 22px;
+}
+.info-box .info-button button {
+  background: var(--colorWhite);
+  border: 1px solid var(--colorPrimary);
+  color: var(--colorPrimary);
+  transition: 0.3s;
+}
+.info-box .info-button button:hover {
+  background: var(--colorPrimary);
+  border: 1px solid var(--colorPrimary);
+  color: var(--colorWhite);
+}
+
+/* ANIMATIONS */
+@keyframes spin {
+  0% {
+    transform: rotateY(0deg) scale(1.15);
+  }
+  100% {
+    transform: rotateY(360deg) scale(1.15);
+  }
+}
+@keyframes wave {
+  0% {
+    transform: skew(0deg, 0deg) scale(1.15);
+  }
+  50% {
+    transform: skew(0deg, -10deg) scale(1.15);
+    transform-origin: -10px -10px;
+  }
+  100% {
+    transform: skew(0deg, 0deg) scale(1.15);
+  }
+}
+@keyframes scale {
+  0% {
+    transform: scale(1.15);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1.15);
+  }
+}
+@keyframes up-down {
+  0% {
+    transform: translateY(0) scale(1.15);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.15);
+  }
+  100% {
+    transform: translateY(0) scale(1.15);
+  }
+}
+@keyframes down-up {
+  0% {
+    transform: translateY(0) scale(1.15);
+  }
+  50% {
+    transform: translateY(10px) scale(1.15);
+  }
+  100% {
+    transform: translateY(0) scale(1.15);
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .main-header .logo {
+    box-shadow: 0 0 10px rgb(93, 93, 93) !important;
+    background-color: var(--colorWhite) !important;
+    color: var(--colorPrimary) !important;
+  }
+  .main-header h3 {
+    padding-top: 5px;
+    font-size: 100%;
+  }
+}

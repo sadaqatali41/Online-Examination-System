@@ -71,16 +71,16 @@ function AdminValidation()
 		document.getElementById('pass').focus();
 		return false;
 	}
-	else if(capcha=="")
-	{
-		alert("Please Enter Capcha !");
-		document.getElementById('code').focus();
-		return false;
-	}
-	else if(capcha.length>5 || capcha.length<5)
-	{
-		alert("Please Enter 5 Digits Capcha !");
-		document.getElementById('code').focus();
-		return false;
-	}
+	// else if(capcha=="")
+	// {
+	// 	alert("Please Enter Capcha !");
+	// 	document.getElementById('code').focus();
+	// 	return false;
+	// }
+	// else if(capcha.length>5 || capcha.length<5)
+	// {
+	// 	alert("Please Enter 5 Digits Capcha !");
+	// 	document.getElementById('code').focus();
+	// 	return false;
+	// }
 }

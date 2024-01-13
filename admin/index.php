@@ -10,15 +10,14 @@ $auth->sessionStart();
 if ($auth->loginCheck($conn) === FALSE) {
   header("Location: login.php");
 }
+$user_data = $_SESSION['user_data'];
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Welcome xyz</h1>
-</body>
-</html>
+
+<!-- inlude header -->
+<?php include_once 'inc/header.php'; ?>
+<!-- content wrapper -->
+<div class="content-wrapper">
+  <!-- main content -->
+</div>
+<!-- /.content wrapper -->
+<?php include_once 'inc/footer.php'; ?>

@@ -17,9 +17,9 @@ if($auth->loginCheck($conn) === true) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Login - Online Examination System</title>
     <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<!-- Login CSS -->
-    <link rel="stylesheet" href="dist/css/login.css">
+    <link rel="stylesheet" href="../dist/css/login.css">
 </head>
 <body>
 	<div class="container">
@@ -39,9 +39,9 @@ if($auth->loginCheck($conn) === true) {
 		</div>
 	</div>
 	<!-- jQuery 3 -->
-	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="../bower_components/jquery/dist/jquery.min.js"></script>
 	<!-- Bootstrap 3.3.7 -->
-	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<!-- Login JS -->
 	<script src="js/login.js"></script>
 </body>

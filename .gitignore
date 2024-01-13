@@ -1,1 +1,3 @@
-/admin/bower_components/
+/bower_components
+/plugins
+/dist

@@ -69,9 +69,5 @@ if(filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_S
 
             echo json_encode($addRes);
             break;
-        
-        default:
-            # code...
-            break;
     }
 }

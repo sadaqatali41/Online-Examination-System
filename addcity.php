@@ -1,10 +1,10 @@
 <?php
 include 'admin_menubar.php';
-if (!isset($_SESSION['adminid'])) 
-{
-	header('location:http://localhost/OES_BS/admin-login');
-	exit(0);
-}
+// if (!isset($_SESSION['adminid'])) 
+// {
+// 	header('location:http://localhost/OES_BS/admin-login');
+// 	exit(0);
+// }
 
 ?>
 

@@ -31,5 +31,8 @@
 	<!-- AdminLTE for demo purposes -->
 	<script src="../dist/js/demo.js"></script>
     <!-- page specific js -->
+	<?php if(defined('CUSTOM_JS')) : ?>
+	<script src="<?= CUSTOM_JS; ?>"></script>
+	<?php endif; ?>
 </body>
 </html>

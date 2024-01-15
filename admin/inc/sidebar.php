@@ -20,8 +20,8 @@
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="<?php print PROJECT_ROOT; ?>mstr/mstr_dept.php">
-                            <i class="fa fa-dashboard"></i> <span>Department Master</span>
+                        <a href="<?php print PROJECT_ROOT; ?>admin/center.php">
+                            <i class="fa fa-dashboard"></i> <span>Center</span>
                         </a>
                     </li> 
                     <li>

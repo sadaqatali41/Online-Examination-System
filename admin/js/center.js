@@ -58,4 +58,95 @@ $(function(){
             'copy', 'csv', 'excel', 'print'
         ]
     });
+
+    bind_select2();
+
+    $(document).on('click', '#addNewRow', () => {
+        var clonedDiv = $("#centerTbl tr:last");
+        clonedDiv.find(".center_city").select2("destroy").removeAttr('data-live-search').removeAttr('data-select2-id').removeAttr('aria-hidden').removeAttr('tabindex');
+        var NewDiv = clonedDiv.clone();
+        NewDiv.find(".center_city").val(null).trigger("change.select2");
+        NewDiv.find(".center_name").val("");
+        NewDiv.find(".center_code").val("");
+        NewDiv.find(".address").val("");
+        NewDiv.find(".center_id").val("");
+        NewDiv.find(".removeRow").attr("data-id", 0);
+        NewDiv.insertAfter(clonedDiv);
+
+        bind_select2();
+    });
+
+    $(document).on('click', '.removeRow', function(){
+        let row = $('.removeRow').length;
+        if(row == 1) {
+            alert('Sorry! you can`t remove all rows.');
+        } else {
+            $(this).closest('tr').remove();
+        }
+    });
+
+    function bind_select2() {
+
+        $(".center_city").select2({
+            placeholder: "Search City...",
+            width: '100%',
+            ajax: {
+                url: "ajax/center.php",
+                type: 'POST',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        searchTerm: params.term, // search term
+                        page: params.page,
+                        act: "findCity"
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.items,
+                        pagination: {
+                            more: (params.page * 10) < data.count_filtered
+                        }
+                    };
+                },
+                cache: false
+            }
+        });
+    }
+
+    $(document).on('submit', '#centerAddForm', function(){
+        
+        $.ajax({
+            url: 'ajax/center.php',
+            type: 'POST',
+            data: $(this).serialize() + '&' + $.param({'act': 'centerSubmit'}),
+            async: true,
+            cache: false,
+            contentType: "application/x-www-form-urlencoded",
+            processData: false,
+            beforeSend: function() {
+                $('#centerAddFormBtn').html('Loading...').attr('disabled', true);
+            },
+            success: function(res) {
+                let data = JSON.parse(res);
+                if(data.status === 'error') {
+                    let errors = '';
+                    $.each(data.error, function(i, value){
+                        errors += value + "\r\n";
+                    });
+                    alert(errors);
+                    $('#centerAddFormBtn').html('Save').attr('disabled', false);
+                } else {
+                    alert(data.message);
+                    window.location.reload();
+                }
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+        return false;
+    });
 });

@@ -7,8 +7,8 @@ $db = new Database();
 $conn = $db->connectDB();
 $auth = new UserAuth();
 $auth->sessionStart();
-if ($auth->loginCheck($conn) === FALSE) {
-  header("Location: ../login.php");
+if ($auth->loginCheck($conn) === false) {
+    header("Location: ../login.php");
 }
 $user_data = $_SESSION['user_data'];
 
@@ -28,7 +28,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             ## Search
             $searchQuery = " ";
             if ($searchValue != '') {
-                $searchQuery = " AND (fb.bill_no LIKE '%" . $searchValue . "%' OR fb.bill_date LIKE '%" . $searchValue . "%' OR fb.ven_cd LIKE '%" . $searchValue . "%' OR fb.vendor_type LIKE '%" . $searchValue . "%' OR fb.ven_bill_no LIKE '%" . $searchValue . "%' OR fb.ven_bill_date LIKE '%" . $searchValue . "%' OR fb.grn_no LIKE '%" . $searchValue . "%' OR fb.grn_dt LIKE '%" . $searchValue . "%' OR fccm.description LIKE '%" . $searchValue . "%' OR vm.name LIKE '%" . $searchValue . "%' OR fb.vou_no LIKE '%" . $searchValue . "%')";
+                $searchQuery = " AND (c.center_name LIKE '%" . $searchValue . "%' OR c.center_code LIKE '%" . $searchValue . "%' OR ct.name LIKE '%" . $searchValue . "%' OR c.center_address LIKE '%" . $searchValue . "%')";
             }
 
             ## Total number of records without filtering
@@ -69,6 +69,81 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             );
 
             print json_encode($response);
+            break;
+
+        case "findCity":
+            $search = "";
+            $resPerPage = 10;
+
+            if (filter_has_var(INPUT_POST, "searchTerm")) {
+                $searchTerm = strtoupper(filter_input(INPUT_POST, "searchTerm", FILTER_SANITIZE_STRING));
+                if (isset($searchTerm) && !empty($searchTerm)) {
+                    $search = " AND (c.id LIKE '%$searchTerm%' OR c.name LIKE '%$searchTerm%')";
+                }
+            }
+            $page = 1;
+            if (filter_has_var(INPUT_POST, "page")) {
+                $page = filter_input(INPUT_POST, "page", FILTER_VALIDATE_INT);
+            }
+
+            #total records without filter
+            $st = $conn->prepare("SELECT c.id, c.name FROM cities c WHERE 1=1 $search");
+            $st->execute();
+            $res = $st->get_result();
+            $tot_res = $res->num_rows;
+
+            $numRow = ($page - 1) * $resPerPage;
+
+            $st1 = $conn->prepare("SELECT c.id, c.name FROM cities c WHERE 1=1 $search LIMIT " . $numRow . ", " . $resPerPage . "");
+            $st1->execute();
+            $res2 = $st1->get_result();
+            $num_row = $res2->num_rows;
+
+            $json['items'] = [];
+            if ($num_row > 0) {
+                while ($row = $res2->fetch_assoc()) {
+                    $json['items'][] = [
+                        'id' => $row['id'],
+                        'text' => $row['name'],
+                    ];
+                }
+            }
+            $json["count_filtered"] = $tot_res;
+
+            echo json_encode($json);
+            break;
+
+        case 'centerSubmit':
+            $center_name = filter_input(INPUT_POST, 'center_name', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+            $center_code = filter_input(INPUT_POST, 'center_code', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
+            $center_city = filter_input(INPUT_POST, 'center_city', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
+            $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+
+            $totInput = count($center_code) - 1;
+
+            for($i = 0; $i <= $totInput; $i++) {
+                if(empty($center_name[$i])) {
+                    $error[] = 'Center Name is required.';
+                }
+                if(empty($center_code[$i])) {
+                    $error[] = 'Center Code is required.';
+                }
+                if(empty($center_city[$i])) {
+                    $error[] = 'Center City is required.';
+                }
+                if(empty($address[$i])) {
+                    $error[] = 'Address is required.';
+                }
+            }
+
+            if(empty($error)) {
+
+            } else {
+                $addRes['status'] = 'error';
+                $addRes['error'] = $error;
+            }
+
+            echo json_encode($addRes);
             break;
     }
 }

@@ -2,7 +2,6 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
 RewriteRule ^(.*)$ $1.php [NC,L]
-php_value max_input_vars 1000000;
 
 # RewriteEngine on
 # RewriteCond %{REQUEST_FILENAME} !-f

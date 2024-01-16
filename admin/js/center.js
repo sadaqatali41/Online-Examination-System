@@ -121,11 +121,7 @@ $(function(){
         $.ajax({
             url: 'ajax/center.php',
             type: 'POST',
-            data: $(this).serialize() + '&' + $.param({'act': 'centerSubmit'}),
-            async: true,
-            cache: false,
-            contentType: "application/x-www-form-urlencoded",
-            processData: false,
+            data: $(this).serialize() + '&' + $.param({'act': 'centerAddSubmit'}),
             beforeSend: function() {
                 $('#centerAddFormBtn').html('Loading...').attr('disabled', true);
             },
@@ -138,6 +134,36 @@ $(function(){
                     });
                     alert(errors);
                     $('#centerAddFormBtn').html('Save').attr('disabled', false);
+                } else {
+                    alert(data.message);
+                    window.location.reload();
+                }
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+        return false;
+    });
+
+    $(document).on('submit', '#centerEditForm', function(){
+        
+        $.ajax({
+            url: 'ajax/center.php',
+            type: 'POST',
+            data: $(this).serialize() + '&' + $.param({'act': 'centerEditSubmit'}),
+            beforeSend: function() {
+                $('#centerEditFormBtn').html('Loading...').attr('disabled', true);
+            },
+            success: function(res) {
+                let data = JSON.parse(res);
+                if(data.status === 'error') {
+                    let errors = '';
+                    $.each(data.error, function(i, value){
+                        errors += value + "\r\n";
+                    });
+                    alert(errors);
+                    $('#centerEditFormBtn').html('Save').attr('disabled', false);
                 } else {
                     alert(data.message);
                     window.location.reload();

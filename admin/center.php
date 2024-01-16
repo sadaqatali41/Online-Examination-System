@@ -123,6 +123,96 @@ $user_data = $_SESSION['user_data'];
                     </div>
                 </div>
             </section>
+        <?php
+            break;
+        case 'edit':
+            if(filter_has_var(INPUT_GET, 'id')) {
+                $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+                $stmt = $conn->prepare("SELECT c.*, ct.name FROM centers c INNER JOIN cities ct ON ct.id=c.center_city WHERE c.id=?");
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+                $res = $stmt->get_result();
+                $stmt->close();
+                if($res->num_rows > 0) {
+                    $row = $res->fetch_assoc();
+                } else {
+                    header('Location: center.php');
+                }
+            } else {
+                header('Location: center.php');
+            }
+        ?>
+            <section class="content-header">
+                <h1>Edit Center</h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li><a href="#">Forms</a></li>
+                    <li class="active">Edit Center</li>
+                </ol>
+            </section>
+            <!-- main content -->
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-info">
+                            <div class="box-body">
+                                <form id="centerEditForm">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a href="center.php" class="btn btn-sm btn-info"><i class="fa fa-list"></i> View</a>
+                                            <button type="submit" id="centerEditFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-wrapper">
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="center_name">Center Name</label>
+                                                            <input type="text" name="center_name" value="<?= $row['center_name']; ?>" class="form-control" autocomplete="off">
+                                                            <input type="hidden" name="center_id" value="<?= $row['id']; ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="center_code">Center Code</label>
+                                                            <input type="text" name="center_code" value="<?= $row['center_code']; ?>" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="center_city">Center City</label>
+                                                            <select name="center_city" class="form-control center_city">
+                                                                <option value="<?= $row['center_city']; ?>"><?= $row['name']; ?></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="center_status">Center Status</label>
+                                                            <select name="center_status" class="form-control">
+                                                                <option value="A" <?php if($row['center_status']=='A'){echo 'selected';} ?>>Active</option>
+                                                                <option value="I" <?php if($row['center_status']=='I'){echo 'selected';} ?>>Inactive</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="address">Address</label>
+                                                            <input type="text" name="address" value="<?= $row['center_address']; ?>" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>                                                
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
     <?php  break; } ?>
 </div>
 <!-- /.content wrapper -->

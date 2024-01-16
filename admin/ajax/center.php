@@ -113,7 +113,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             echo json_encode($json);
             break;
 
-        case 'centerSubmit':
+        case 'centerAddSubmit':
             $center_name = filter_input(INPUT_POST, 'center_name', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
             $center_code = filter_input(INPUT_POST, 'center_code', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
             $center_city = filter_input(INPUT_POST, 'center_city', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
@@ -134,10 +134,109 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 if(empty($address[$i])) {
                     $error[] = 'Address is required.';
                 }
+                if(empty($error)) {
+                    if(strlen($center_name[$i]) > 20) {
+                        $error[] = "Center Name can not be greater than 20 characters.";
+                    }
+                    if(strlen($center_code[$i]) > 20) {
+                        $error[] = "Center Code can not be greater than 11 characters.";
+                    }
+                    if(strlen($address[$i]) > 255) {
+                        $error[] = "Address can not be greater than 255 characters.";
+                    }
+                }
             }
 
             if(empty($error)) {
 
+                try {
+                    $conn->autocommit(false);
+
+                    $stmt = $conn->prepare("INSERT INTO centers(center_name, center_code, center_city, center_address, created_by) VALUES (?,?,?,?,?)");
+
+                    for ($i = 0; $i <= $totInput; $i++) { 
+                        $stmt->bind_param("siiss", $center_name[$i], $center_code[$i], $center_city[$i], $address[$i], $user_data['id']);
+                        if($stmt->execute() === false) {
+                            throw new Exception("Can't insert in centers. Reason : " . $stmt->error);
+                        }
+                    }
+                    $stmt->close();
+
+                    if($conn->commit()) {
+                        $addRes['status'] = 'success';
+                        $addRes['message'] = 'Success, Center is added.';
+                    }
+
+                } catch (Exception $th) {
+                    $error[] = $th->getMessage();
+                    $addRes['status'] = 'error';
+                    $addRes['error'] = $error;
+                    $conn->rollback();
+                }
+            } else {
+                $addRes['status'] = 'error';
+                $addRes['error'] = $error;
+            }
+
+            echo json_encode($addRes);
+            break;
+
+        case 'centerEditSubmit':
+            $center_id = filter_input(INPUT_POST, 'center_id', FILTER_VALIDATE_INT);
+            $center_name = filter_input(INPUT_POST, 'center_name', FILTER_SANITIZE_STRING);
+            $center_code = filter_input(INPUT_POST, 'center_code', FILTER_VALIDATE_INT);
+            $center_city = filter_input(INPUT_POST, 'center_city', FILTER_VALIDATE_INT);
+            $center_status = filter_input(INPUT_POST, 'center_status', FILTER_SANITIZE_STRING);
+            $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
+
+            if(empty($center_name)) {
+                $error[] = 'Center Name is required.';
+            }
+            if(empty($center_code)) {
+                $error[] = 'Center Code is required.';
+            }
+            if(empty($center_city)) {
+                $error[] = 'Center City is required.';
+            }
+            if(empty($address)) {
+                $error[] = 'Address is required.';
+            }
+            if(empty($error)) {
+                if(strlen($center_name) > 20) {
+                    $error[] = "Center Name can not be greater than 20 characters.";
+                }
+                if(strlen($center_code) > 20) {
+                    $error[] = "Center Code can not be greater than 11 characters.";
+                }
+                if(strlen($address) > 255) {
+                    $error[] = "Address can not be greater than 255 characters.";
+                }
+            }
+
+            if(empty($error)) {
+
+                try {
+                    $conn->autocommit(false);
+
+                    $stmt = $conn->prepare("UPDATE centers SET center_name=?, center_code=?, center_city=?, center_address=?, updated_by=?, center_status=? WHERE id=?");
+                    $stmt->bind_param("siisssi", $center_name, $center_code, $center_city, $address, $user_data['id'], $center_status, $center_id);
+                    
+                    if($stmt->execute() === false) {
+                        throw new Exception("Can't insert in centers. Reason : " . $stmt->error);
+                    }
+                    $stmt->close();
+
+                    if($conn->commit()) {
+                        $addRes['status'] = 'success';
+                        $addRes['message'] = 'Success, Center is updated.';
+                    }
+
+                } catch (Exception $th) {
+                    $error[] = $th->getMessage();
+                    $addRes['status'] = 'error';
+                    $addRes['error'] = $error;
+                    $conn->rollback();
+                }
             } else {
                 $addRes['status'] = 'error';
                 $addRes['error'] = $error;

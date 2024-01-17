@@ -13,20 +13,25 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-users"></i> <span>Master</span>
+                    <span>Master</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="<?php print PROJECT_ROOT; ?>admin/center.php">
-                            <i class="fa fa-dashboard"></i> <span>Center</span>
+                        <a href="<?php print PROJECT_ROOT; ?>admin/center">
+                            <i class="fa fa-circle"></i> <span>Centers</span>
                         </a>
                     </li> 
                     <li>
-                        <a href="<?php print PROJECT_ROOT; ?>mstr/mstr_gst.php">
-                            <i class="fa fa-dollar"></i> <span>GST Master</span>
+                        <a href="<?php print PROJECT_ROOT; ?>admin/course_category">
+                            <i class="fa fa-circle"></i> <span>Course Categories</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php print PROJECT_ROOT; ?>admin/course">
+                            <i class="fa fa-circle"></i> <span>Courses</span>
                         </a>
                     </li>
                 </ul>

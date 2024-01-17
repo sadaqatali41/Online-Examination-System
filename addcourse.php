@@ -1,13 +1,13 @@
 <?php
 include 'admin_menubar.php';
-if (!isset($_SESSION['adminid'])) 
-{
-	header('location:http://localhost/OES_BS/admin-login');
-	exit(0);
-}
+// if (!isset($_SESSION['adminid'])) 
+// {
+// 	header('location:http://localhost/OES_BS/admin-login');
+// 	exit(0);
+// }
 $con=mysqli_connect('localhost','root');
 mysqli_select_db($con,'online_examination_system');
-$query="select * from course_category order by cname asc";
+$query="select * from course_category order by cc_name asc";
 $result=mysqli_query($con,$query);
 mysqli_close($con);
 $row=mysqli_num_rows($result);

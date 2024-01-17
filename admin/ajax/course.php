@@ -222,7 +222,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                     $stmt->bind_param("siisssi", $center_name, $center_code, $center_city, $address, $user_data['id'], $center_status, $center_id);
                     
                     if($stmt->execute() === false) {
-                        throw new Exception("Can't update centers. Reason : " . $stmt->error);
+                        throw new Exception("Can't insert in centers. Reason : " . $stmt->error);
                     }
                     $stmt->close();
 

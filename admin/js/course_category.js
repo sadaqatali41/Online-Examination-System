@@ -40,7 +40,7 @@ $(function(){
             "render": function(data, type, row, cell) {
                 let manage = ''; 
                 manage += '<div class="btn-group" style="display: flex;">';
-                manage += '<a href="course_category.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
+                manage += '<a href="course_category.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
                 manage += '</div>';
 
                 return manage;

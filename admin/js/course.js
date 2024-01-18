@@ -7,7 +7,7 @@ $(function(){
         "ajax": {
             "url": "ajax/course.php",
             "data": {
-                "act": "center_list"
+                "act": "course_list"
             }
         },
         "lengthMenu": [25, 50, 75, 100],
@@ -21,15 +21,13 @@ $(function(){
         "columns": [{
             "data": "id"
         }, {
-            "data": "center_name"
+            "data": "cc_id"
         }, {
-            "data": "center_code"
+            "data": "course_name"
         }, {
-            "data": "center_city"
+            "data": "course_code"
         }, {
-            "data": "center_address"
-        }, {
-            "data": "center_status",
+            "data": "course_status",
             "render": function(data, type, row, cell) {
                 if(data == 'A') {
                     return '<label class="badge bg-green">Active</label>';
@@ -42,7 +40,7 @@ $(function(){
             "render": function(data, type, row, cell) {
                 let manage = ''; 
                 manage += '<div class="btn-group" style="display: flex;">';
-                manage += '<a href="course.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
+                manage += '<a href="course.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
                 manage += '</div>';
 
                 return manage;
@@ -62,14 +60,13 @@ $(function(){
     bind_select2();
 
     $(document).on('click', '#addNewRow', () => {
-        var clonedDiv = $("#centerTbl tr:last");
-        clonedDiv.find(".center_city").select2("destroy").removeAttr('data-live-search').removeAttr('data-select2-id').removeAttr('aria-hidden').removeAttr('tabindex');
+        var clonedDiv = $("#inputsTbl tr:last");
+        clonedDiv.find(".cc_id").select2("destroy").removeAttr('data-live-search').removeAttr('data-select2-id').removeAttr('aria-hidden').removeAttr('tabindex');
         var NewDiv = clonedDiv.clone();
-        NewDiv.find(".center_city").val(null).trigger("change.select2");
-        NewDiv.find(".center_name").val("");
-        NewDiv.find(".center_code").val("");
-        NewDiv.find(".address").val("");
-        NewDiv.find(".center_id").val("");
+        NewDiv.find(".cc_id").val(null).trigger("change.select2");
+        NewDiv.find(".course_name").val("");
+        NewDiv.find(".course_code").val("");
+        NewDiv.find(".course_id").val("");
         NewDiv.find(".removeRow").attr("data-id", 0);
         NewDiv.insertAfter(clonedDiv);
 
@@ -87,8 +84,8 @@ $(function(){
 
     function bind_select2() {
 
-        $(".center_city").select2({
-            placeholder: "Search City...",
+        $(".cc_id").select2({
+            placeholder: "Search Course Category...",
             width: '100%',
             ajax: {
                 url: "ajax/course.php",
@@ -99,7 +96,7 @@ $(function(){
                     return {
                         searchTerm: params.term, // search term
                         page: params.page,
-                        act: "findCity"
+                        act: "findCourseCat"
                     };
                 },
                 processResults: function(data, params) {
@@ -116,14 +113,33 @@ $(function(){
         });
     }
 
-    $(document).on('submit', '#centerAddForm', function(){
+    $(document).on('change', '.course_code', function(){
+        let element = $(this);
+        let course_code = element.val();
+        if(isNaN(course_code)) {
+            alert('[0-9] digits are allowed only.');
+            element.val('');
+            return false;
+        }
+
+        $('.course_code').not(element).each(function(i, val){
+            let others = $(val).val();
+            if(course_code === others) {
+                alert('Duplicate Course Code is founded.');
+                element.val('');
+                return false;
+            }
+        });
+    });
+
+    $(document).on('submit', '#courseAddForm', function(){
         
         $.ajax({
             url: 'ajax/course.php',
             type: 'POST',
-            data: $(this).serialize() + '&' + $.param({'act': 'centerAddSubmit'}),
+            data: $(this).serialize() + '&' + $.param({'act': 'courseAddSubmit'}),
             beforeSend: function() {
-                $('#centerAddFormBtn').html('Loading...').attr('disabled', true);
+                $('#courseAddFormBtn').html('Loading...').attr('disabled', true);
             },
             success: function(res) {
                 let data = JSON.parse(res);
@@ -133,7 +149,7 @@ $(function(){
                         errors += value + "\r\n";
                     });
                     alert(errors);
-                    $('#centerAddFormBtn').html('Save').attr('disabled', false);
+                    $('#courseAddFormBtn').html('Save').attr('disabled', false);
                 } else {
                     alert(data.message);
                     window.location.reload();
@@ -146,14 +162,14 @@ $(function(){
         return false;
     });
 
-    $(document).on('submit', '#centerEditForm', function(){
+    $(document).on('submit', '#courseEditForm', function(){
         
         $.ajax({
             url: 'ajax/course.php',
             type: 'POST',
-            data: $(this).serialize() + '&' + $.param({'act': 'centerEditSubmit'}),
+            data: $(this).serialize() + '&' + $.param({'act': 'courseEditSubmit'}),
             beforeSend: function() {
-                $('#centerEditFormBtn').html('Loading...').attr('disabled', true);
+                $('#courseEditFormBtn').html('Loading...').attr('disabled', true);
             },
             success: function(res) {
                 let data = JSON.parse(res);
@@ -163,7 +179,7 @@ $(function(){
                         errors += value + "\r\n";
                     });
                     alert(errors);
-                    $('#centerEditFormBtn').html('Save').attr('disabled', false);
+                    $('#courseEditFormBtn').html('Save').attr('disabled', false);
                 } else {
                     alert(data.message);
                     window.location.reload();

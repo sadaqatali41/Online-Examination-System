@@ -48,10 +48,9 @@ $user_data = $_SESSION['user_data'];
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Name</th>
-                                            <th>Code</th>
-                                            <th>City</th>
-                                            <th>Address</th>
+                                            <th>Course Category</th>
+                                            <th>Course Name</th>
+                                            <th>Course Code</th>
                                             <th>Status</th>
                                             <th>Manage</th>
                                         </tr>
@@ -77,39 +76,37 @@ $user_data = $_SESSION['user_data'];
             <!-- main content -->
             <section class="content">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6 col-xs-12 col-sm-12">
                         <div class="box box-info">
                             <div class="box-body">
-                                <form id="centerAddForm">
+                                <form id="courseAddForm">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <a href="course.php" class="btn btn-sm btn-info"><i class="fa fa-list"></i> View</a>
-                                            <button type="submit" id="centerAddFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
+                                            <button type="submit" id="courseAddFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-wrapper">
                                                 <div class="table-wrapper" style="max-width: 100%; height: 350px; padding:0px; margin: 0px; overflow-y: scroll; overflow-x:scroll; -webkit-overflow-scrolling: touch;">
-                                                    <table class="fixed-header table-striped table-bordered table-condensed" id="centerTbl" style="width: 100%;">
+                                                    <table class="fixed-header table-striped table-bordered table-condensed" id="inputsTbl" style="width: 100%;">
                                                         <thead>
                                                             <tr>
                                                                 <th style="width: 30px;"><button type="button" class="btn btn-info btn-xs" id="addNewRow"><i class="fa fa-plus"></i></button></th>
-                                                                <th style="width: 180px;">Center Name</th>
-                                                                <th style="width: 110px;">Center Code</th>
-                                                                <th style="width: 180px;">Center City</th>
-                                                                <th>Address</th>
+                                                                <th style="width: 180px;">Course Category</th>
+                                                                <th style="width: 180px;">Course Name</th>
+                                                                <th style="width: 110px;">Course Code</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
                                                                 <td><button type="button" class="btn btn-xs btn-danger removeRow"><i class="fa fa-minus"></i></button></td>
-                                                                <td><input type="text" name="center_name[]" class="form-control center_name" autocomplete="off"></td>
-                                                                <td><input type="text" name="center_code[]" class="form-control center_code" autocomplete="off"></td>
                                                                 <td>
-                                                                    <select name="center_city[]" class="form-control center_city"></select>
+                                                                    <select name="cc_id[]" class="form-control cc_id"></select>
                                                                 </td>
-                                                                <td><input type="text" name="address[]" class="form-control address" autocomplete="off"></td>
+                                                                <td><input type="text" name="course_name[]" class="form-control course_name" autocomplete="off"></td>
+                                                                <td><input type="text" name="course_code[]" class="form-control course_code" autocomplete="off"></td>                                                                
                                                             </tr>
                                                         </tbody>
                                                     </table>                                            
@@ -128,7 +125,7 @@ $user_data = $_SESSION['user_data'];
         case 'edit':
             if(filter_has_var(INPUT_GET, 'id')) {
                 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-                $stmt = $conn->prepare("SELECT c.*, ct.name FROM centers c INNER JOIN cities ct ON ct.id=c.center_city WHERE c.id=?");
+                $stmt = $conn->prepare("SELECT c.*, cc.cc_name FROM courses c INNER JOIN course_category cc ON cc.id=c.cc_id WHERE c.id=?");
                 $stmt->bind_param("i", $id);
                 $stmt->execute();
                 $res = $stmt->get_result();
@@ -153,56 +150,56 @@ $user_data = $_SESSION['user_data'];
             <!-- main content -->
             <section class="content">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="box box-info">
                             <div class="box-body">
-                                <form id="centerEditForm">
+                                <form id="courseEditForm">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <a href="course.php" class="btn btn-sm btn-info"><i class="fa fa-list"></i> View</a>
-                                            <button type="submit" id="centerEditFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
+                                            <button type="submit" id="courseEditFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-wrapper">
                                                 <div class="row">
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="center_name">Center Name</label>
-                                                            <input type="text" name="center_name" value="<?= $row['center_name']; ?>" class="form-control" autocomplete="off">
-                                                            <input type="hidden" name="center_id" value="<?= $row['id']; ?>">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="center_code">Center Code</label>
-                                                            <input type="text" name="center_code" value="<?= $row['center_code']; ?>" class="form-control" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="center_city">Center City</label>
-                                                            <select name="center_city" class="form-control center_city">
-                                                                <option value="<?= $row['center_city']; ?>"><?= $row['name']; ?></option>
+                                                            <label for="cc_id">Course Category</label>
+                                                            <select name="cc_id" class="form-control cc_id">
+                                                                <option value="<?= $row['cc_id']; ?>"><?= $row['cc_name']; ?></option>
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="center_status">Center Status</label>
-                                                            <select name="center_status" class="form-control">
-                                                                <option value="A" <?php if($row['center_status']=='A'){echo 'selected';} ?>>Active</option>
-                                                                <option value="I" <?php if($row['center_status']=='I'){echo 'selected';} ?>>Inactive</option>
+                                                            <label for="course_name">Course Name</label>
+                                                            <input type="text" name="course_name" value="<?= $row['course_name']; ?>" class="form-control" autocomplete="off">
+                                                            <input type="hidden" name="course_id" value="<?= $row['id']; ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="course_code">Course Code</label>
+                                                            <input type="text" name="course_code" value="<?= $row['course_code']; ?>" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="course_status">Course Status</label>
+                                                            <select name="course_status" class="form-control">
+                                                                <option value="A" <?php if($row['course_status']=='A'){echo 'selected';} ?>>Active</option>
+                                                                <option value="I" <?php if($row['course_status']=='I'){echo 'selected';} ?>>Inactive</option>
                                                             </select>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label for="address">Address</label>
-                                                            <input type="text" name="address" value="<?= $row['center_address']; ?>" class="form-control" autocomplete="off">
-                                                        </div>
-                                                    </div>
+                                                    </div>                                                    
                                                 </div>                                                
                                             </div>
                                         </div>

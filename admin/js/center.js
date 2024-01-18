@@ -42,7 +42,7 @@ $(function(){
             "render": function(data, type, row, cell) {
                 let manage = ''; 
                 manage += '<div class="btn-group" style="display: flex;">';
-                manage += '<a href="center.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>';
+                manage += '<a href="center.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
                 manage += '</div>';
 
                 return manage;
@@ -115,6 +115,25 @@ $(function(){
             }
         });
     }
+
+    $(document).on('change', '.center_code', function(){
+        let element = $(this);
+        let center_code = element.val();
+        if(isNaN(center_code)) {
+            alert('[0-9] digits are allowed only.');
+            element.val('');
+            return false;
+        }
+
+        $('.center_code').not(element).each(function(i, val){
+            let others = $(val).val();
+            if(center_code === others) {
+                alert('Duplicate Center Code is founded.');
+                element.val('');
+                return false;
+            }
+        });
+    });
 
     $(document).on('submit', '#centerAddForm', function(){
         

@@ -152,15 +152,30 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 try {
                     $conn->autocommit(false);
 
+                    #centers - insert
                     $stmt = $conn->prepare("INSERT INTO centers(center_name, center_code, center_city, center_address, created_by) VALUES (?,?,?,?,?)");
 
-                    for ($i = 0; $i <= $totInput; $i++) { 
+                    #center - fetch for duplicate
+                    $stmt1 = $conn->prepare("SELECT * FROM centers WHERE center_code=?");
+
+                    for ($i = 0; $i <= $totInput; $i++) {
+                        #centers - fetch
+                        $stmt1->bind_param("s", $center_code[$i]);
+                        if($stmt1->execute() === false) {
+                            throw new Exception("Can't fetch centers. Reason : " . $stmt1->error);
+                        }
+                        $res1 = $stmt1->get_result();
+                        if($res1->num_rows > 0) {
+                            throw new Exception("Center Code ({$center_code[$i]}) is already exists.");
+                        }
+                        #centers - insert
                         $stmt->bind_param("siiss", $center_name[$i], $center_code[$i], $center_city[$i], $address[$i], $user_data['id']);
                         if($stmt->execute() === false) {
                             throw new Exception("Can't insert in centers. Reason : " . $stmt->error);
                         }
                     }
                     $stmt->close();
+                    $stmt1->close();
 
                     if($conn->commit()) {
                         $addRes['status'] = 'success';
@@ -210,6 +225,15 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 }
                 if(strlen($address) > 255) {
                     $error[] = "Address can not be greater than 255 characters.";
+                }
+                #centers - fetch for duplicate
+                $stmt1 = $conn->prepare("SELECT * FROM centers WHERE center_code=? AND id!=?");
+                $stmt1->bind_param("si", $center_code, $center_id);
+                $stmt1->execute();
+                $res1 = $stmt1->get_result();
+                $stmt1->close();
+                if($res1->num_rows > 0) {
+                    $error[] = "Center Code ({$center_code}) is already exists.";
                 }
             }
 

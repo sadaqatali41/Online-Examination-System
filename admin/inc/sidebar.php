@@ -34,6 +34,11 @@
                             <i class="fa fa-circle"></i> <span>Courses</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="<?php print PROJECT_ROOT; ?>admin/question">
+                            <i class="fa fa-circle"></i> <span>Questions</span>
+                        </a>
+                    </li>
                 </ul>
             </li>        
         </ul>

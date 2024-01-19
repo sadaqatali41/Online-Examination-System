@@ -1,13 +1,13 @@
 <?php
 include 'admin_menubar.php';
-if (!isset($_SESSION['adminid'])) 
-{
-	header('location:http://localhost/OnlineExamination1/admin-login');
-}
+// if (!isset($_SESSION['adminid'])) 
+// {
+// 	header('location:http://localhost/OnlineExamination1/admin-login');
+// }
 
 $con=mysqli_connect('localhost','root');
 mysqli_select_db($con,'online_examination_system');
-$query="SELECT * FROM course WHERE course_status = 1 ORDER BY name ASC"; 
+$query="SELECT * FROM courses WHERE course_status = 1 #ORDER BY name ASC"; 
 $result=mysqli_query($con,$query);	//Accociative Array represented by Result 
 $num=mysqli_num_rows($result);
 mysqli_close($con);

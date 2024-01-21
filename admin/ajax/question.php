@@ -25,10 +25,19 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $columnName = filter_var($_POST['columns'][$columnIndex]['data'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); // Column name
             $columnSortOrder = filter_var($_POST['order'][0]['dir'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); // asc or desc
             $searchValue = filter_var($_POST['search']['value'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); // Search value
+            #custom filter
+            $course_id = filter_var($_POST['course_id'], FILTER_VALIDATE_INT);
+            $question_status = filter_var($_POST['question_status'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
             ## Search
             $searchQuery = " ";
             if ($searchValue != '') {
                 $searchQuery = " AND (cc.course_name LIKE '%" . $searchValue . "%' OR q.question_name LIKE '%" . $searchValue . "%')";
+            }
+            if(isset($course_id) && !empty($course_id)) {
+                $searchQuery .= " AND q.course_id=" . $course_id;
+            }
+            if(isset($question_status) && !empty($question_status)) {
+                $searchQuery .= " AND q.question_status='". $question_status ."'";
             }
 
             ## Total number of records without filtering
@@ -118,12 +127,12 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 
         case 'questionAddSubmit':
             $course_id = filter_input(INPUT_POST, 'course_id', FILTER_VALIDATE_INT);
-            $question_name = filter_input(INPUT_POST, 'question_name', FILTER_SANITIZE_STRING);
-            $optionA = filter_input(INPUT_POST, 'optionA', FILTER_SANITIZE_STRING);
-            $optionB = filter_input(INPUT_POST, 'optionB', FILTER_SANITIZE_STRING);
-            $optionC = filter_input(INPUT_POST, 'optionC', FILTER_SANITIZE_STRING);
-            $optionD = filter_input(INPUT_POST, 'optionD', FILTER_SANITIZE_STRING);
-            $correct_option = filter_input(INPUT_POST, 'correct_option', FILTER_SANITIZE_STRING);
+            $question_name = trim(filter_input(INPUT_POST, 'question_name', FILTER_SANITIZE_STRING));
+            $optionA = trim(filter_input(INPUT_POST, 'optionA', FILTER_SANITIZE_STRING));
+            $optionB = trim(filter_input(INPUT_POST, 'optionB', FILTER_SANITIZE_STRING));
+            $optionC = trim(filter_input(INPUT_POST, 'optionC', FILTER_SANITIZE_STRING));
+            $optionD = trim(filter_input(INPUT_POST, 'optionD', FILTER_SANITIZE_STRING));
+            $correct_option = trim(filter_input(INPUT_POST, 'correct_option', FILTER_SANITIZE_STRING));
 
             if(empty($course_id)) {
                 $error[] = 'Course Name is required.';
@@ -178,38 +187,40 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             echo json_encode($addRes);
             break;
 
-        case 'courseEditSubmit':
+        case 'questionEditSubmit':
+            $question_id = filter_input(INPUT_POST, 'question_id', FILTER_VALIDATE_INT);
             $course_id = filter_input(INPUT_POST, 'course_id', FILTER_VALIDATE_INT);
-            $cc_id = filter_input(INPUT_POST, 'cc_id', FILTER_VALIDATE_INT);
-            $course_name = filter_input(INPUT_POST, 'course_name', FILTER_SANITIZE_STRING);
-            $course_code = filter_input(INPUT_POST, 'course_code', FILTER_VALIDATE_INT);
-            $course_status = filter_input(INPUT_POST, 'course_status', FILTER_SANITIZE_STRING);
+            $question_name = trim(filter_input(INPUT_POST, 'question_name', FILTER_SANITIZE_STRING));
+            $optionA = trim(filter_input(INPUT_POST, 'optionA', FILTER_SANITIZE_STRING));
+            $optionB = trim(filter_input(INPUT_POST, 'optionB', FILTER_SANITIZE_STRING));
+            $optionC = trim(filter_input(INPUT_POST, 'optionC', FILTER_SANITIZE_STRING));
+            $optionD = trim(filter_input(INPUT_POST, 'optionD', FILTER_SANITIZE_STRING));
+            $correct_option = trim(filter_input(INPUT_POST, 'correct_option', FILTER_SANITIZE_STRING));
+            $question_status = trim(filter_input(INPUT_POST, 'question_status', FILTER_SANITIZE_STRING));
 
-            if(empty($cc_id)) {
-                $error[] = 'Course Category is required.';
-            }
-            if(empty($course_name)) {
+            if(empty($course_id)) {
                 $error[] = 'Course Name is required.';
             }
-            if(empty($course_code)) {
-                $error[] = 'Course Code is required.';
+            if(empty($question_name)) {
+                $error[] = 'Question Name is required.';
             }
-            if(empty($error)) {
-                if(strlen($course_name) > 30) {
-                    $error[] = "Course Name can not be greater than 30 characters.";
-                }
-                if(strlen($course_code) > 11) {
-                    $error[] = "Course Code can not be greater than 11 characters.";
-                }
-                #courses - fetch for duplicate
-                $stmt1 = $conn->prepare("SELECT * FROM courses WHERE course_code=? AND id!=?");
-                $stmt1->bind_param("si", $course_code, $course_id);
-                $stmt1->execute();
-                $res1 = $stmt1->get_result();
-                $stmt1->close();
-                if($res1->num_rows > 0) {
-                    $error[] = "Course Code ({$course_code}) is already exists.";
-                }
+            if(empty($optionA)) {
+                $error[] = 'Option A is required.';
+            }
+            if(empty($optionB)) {
+                $error[] = 'Option B is required.';
+            }
+            if(empty($optionC)) {
+                $error[] = 'Option C is required.';
+            }
+            if(empty($optionD)) {
+                $error[] = 'Option D is required.';
+            }
+            if(empty($correct_option)) {
+                $error[] = 'Correct Option is required.';
+            }
+            if(empty($question_status)) {
+                $error[] = 'Question Status is required.';
             }
 
             if(empty($error)) {
@@ -217,17 +228,17 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 try {
                     $conn->autocommit(false);
 
-                    $stmt = $conn->prepare("UPDATE courses SET course_name=?, course_code=?, cc_id=?, updated_by=?, course_status=? WHERE id=?");
-                    $stmt->bind_param("ssissi", $course_name, $course_code, $cc_id, $user_data['id'], $course_status, $course_id);
+                    $stmt = $conn->prepare("UPDATE questions SET course_id=?, question_name=?, optionA=?, optionB=?, optionC=?, optionD=?, correct_option=?, updated_by=?, question_status=? WHERE id=?");
+                    $stmt->bind_param("issssssisi", $course_id, $question_name, $optionA, $optionB, $optionC, $optionD, $correct_option, $user_data['id'], $question_status, $question_id);
                     
                     if($stmt->execute() === false) {
-                        throw new Exception("Can't update courses. Reason : " . $stmt->error);
+                        throw new Exception("Can't update question. Reason : " . $stmt->error);
                     }
                     $stmt->close();
 
                     if($conn->commit()) {
                         $addRes['status'] = 'success';
-                        $addRes['message'] = 'Success, Course is updated.';
+                        $addRes['message'] = 'Success, Question is updated.';
                     }
 
                 } catch (Exception $th) {

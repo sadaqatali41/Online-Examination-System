@@ -1,69 +1,88 @@
 $(function(){
 
-    $('#example').DataTable({
-        "processing": true,
-        "serverSide": true,
-        'serverMethod': 'post',
-        "ajax": {
-            "url": "ajax/question.php",
-            "data": {
-                "act": "question_list"
-            }
-        },
-        "lengthMenu": [25, 50, 75, 100],
-        "drawCallback": function(settings) {
-            $('.edit').tooltip({
-                container: 'body',
-                placement: 'top',
-                title: 'Edit'
-            });
-        },
-        "columns": [{
-            "data": "id"
-        }, {
-            "data": "course_id"
-        }, {
-            "data": "question_name"
-        }, {
-            "data": "optionA"
-        }, {
-            "data": "optionB"
-        }, {
-            "data": "optionC"
-        }, {
-            "data": "optionD"
-        }, {
-            "data": "correct_option"
-        }, {
-            "data": "question_status",
-            "render": function(data, type, row, cell) {
-                if(data == 'A') {
-                    return '<label class="badge bg-green">Active</label>';
-                } else {
-                    return '<label class="badge bg-red">Inactive</label>';
-                }
-            }
-        }, {
-            "data": null,
-            "render": function(data, type, row, cell) {
-                let manage = ''; 
-                manage += '<div class="btn-group" style="display: flex;">';
-                manage += '<a href="question.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
-                manage += '</div>';
+    var course_id = '';
+    var question_status = '';
 
-                return manage;
-            }
-        }],
-        "order": [0, 'desc'],
-        "columnDefs": [{
-            'targets': -1,
-            'orderable': false
-        }],
-        dom: 'lBfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'print'
-        ]
+    question_list(course_id, question_status);
+
+    function question_list(course_id, question_status) {
+
+        $('#example').DataTable({
+            "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            'destroy': true,
+            "ajax": {
+                "url": "ajax/question.php",
+                "data": {
+                    "act": "question_list",
+                    course_id,
+                    question_status
+                }
+            },
+            "lengthMenu": [25, 50, 75, 100],
+            "drawCallback": function(settings) {
+                $('.edit').tooltip({
+                    container: 'body',
+                    placement: 'top',
+                    title: 'Edit'
+                });
+            },
+            "columns": [{
+                "data": "id"
+            }, {
+                "data": "course_id"
+            }, {
+                "data": "question_name"
+            }, {
+                "data": "optionA"
+            }, {
+                "data": "optionB"
+            }, {
+                "data": "optionC"
+            }, {
+                "data": "optionD"
+            }, {
+                "data": "correct_option"
+            }, {
+                "data": "question_status",
+                "render": function(data, type, row, cell) {
+                    if(data == 'A') {
+                        return '<label class="badge bg-green">Active</label>';
+                    } else {
+                        return '<label class="badge bg-red">Inactive</label>';
+                    }
+                }
+            }, {
+                "data": null,
+                "render": function(data, type, row, cell) {
+                    let manage = ''; 
+                    manage += '<div class="btn-group" style="display: flex;">';
+                    manage += '<a href="question.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
+                    manage += '</div>';
+    
+                    return manage;
+                }
+            }],
+            "order": [0, 'desc'],
+            "columnDefs": [{
+                'targets': -1,
+                'orderable': false
+            }],
+            dom: 'lBfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'print'
+            ]
+        });
+    }
+
+    $(document).on('click', '#search', function(){
+        var course_id = $('#course_id').val();
+        var question_status = $('#question_status').val();
+
+        question_list(course_id, question_status);
     });
+
 
     $("#course_id").select2({
         placeholder: "Search Course...",
@@ -123,14 +142,14 @@ $(function(){
         return false;
     });
 
-    $(document).on('submit', '#courseEditForm', function(){
+    $(document).on('submit', '#questionEditForm', function(){
         
         $.ajax({
             url: 'ajax/question.php',
             type: 'POST',
-            data: $(this).serialize() + '&' + $.param({'act': 'courseEditSubmit'}),
+            data: $(this).serialize() + '&' + $.param({'act': 'questionEditSubmit'}),
             beforeSend: function() {
-                $('#courseEditFormBtn').html('Loading...').attr('disabled', true);
+                $('#questionEditFormBtn').html('Loading...').attr('disabled', true);
             },
             success: function(res) {
                 let data = JSON.parse(res);
@@ -140,7 +159,7 @@ $(function(){
                         errors += value + "\r\n";
                     });
                     alert(errors);
-                    $('#courseEditFormBtn').html('Save').attr('disabled', false);
+                    $('#questionEditFormBtn').html('Save').attr('disabled', false);
                 } else {
                     alert(data.message);
                     window.location.reload();

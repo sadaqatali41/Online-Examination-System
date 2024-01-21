@@ -167,7 +167,7 @@ $user_data = $_SESSION['user_data'];
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -179,7 +179,7 @@ $user_data = $_SESSION['user_data'];
         case 'edit':
             if(filter_has_var(INPUT_GET, 'id')) {
                 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-                $stmt = $conn->prepare("SELECT c.*, cc.cc_name FROM courses c INNER JOIN course_category cc ON cc.id=c.cc_id WHERE c.id=?");
+                $stmt = $conn->prepare("SELECT q.*, cc.course_name FROM questions q INNER JOIN courses cc ON cc.id=q.course_id WHERE q.id=?");
                 $stmt->bind_param("i", $id);
                 $stmt->execute();
                 $res = $stmt->get_result();
@@ -194,11 +194,11 @@ $user_data = $_SESSION['user_data'];
             }
         ?>
             <section class="content-header">
-                <h1>Edit Course</h1>
+                <h1>Edit Question</h1>
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li><a href="#">Forms</a></li>
-                    <li class="active">Edit Course</li>
+                    <li class="active">Edit Question</li>
                 </ol>
             </section>
             <!-- main content -->
@@ -207,11 +207,11 @@ $user_data = $_SESSION['user_data'];
                     <div class="col-md-6 col-xs-12 col-sm-12">
                         <div class="box box-info">
                             <div class="box-body">
-                                <form id="courseEditForm">
+                                <form id="questionEditForm">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <a href="question.php" class="btn btn-sm btn-info"><i class="fa fa-list"></i> View</a>
-                                            <button type="submit" id="courseEditFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
+                                            <button type="submit" id="questionEditFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -220,44 +220,76 @@ $user_data = $_SESSION['user_data'];
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="cc_id">Course Category</label>
-                                                            <select name="cc_id" class="form-control cc_id">
-                                                                <option value="<?= $row['cc_id']; ?>"><?= $row['cc_name']; ?></option>
+                                                            <label for="course_id">Course Name</label>
+                                                            <select name="course_id" id="course_id" class="form-control">
+                                                                <option value="<?= $row['course_id']; ?>"><?= $row['course_name']; ?></option>
+                                                            </select>
+                                                            <input type="hidden" name="question_id" value="<?= $row['id']; ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="question_name">Question</label>
+                                                            <textarea name="question_name" id="question_name" class="form-control" rows="7"><?= $row['question_name']; ?></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="optionA">Option A</label>
+                                                            <input type="text" name="optionA" id="optionA" value="<?= $row['optionA']; ?>" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="optionB">Option B</label>
+                                                            <input type="text" name="optionB" id="optionB" value="<?= $row['optionB']; ?>" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="optionC">Option C</label>
+                                                            <input type="text" name="optionC" id="optionC" value="<?= $row['optionC']; ?>" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="optionD">Option D</label>
+                                                            <input type="text" name="optionD" id="optionD" value="<?= $row['optionD']; ?>" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="correct_option">Correct Option</label>
+                                                            <select name="correct_option" id="correct_option" class="form-control">
+                                                                <option value="">--Select Correct Option--</option>
+                                                                <option value="optionA" <?php if($row['correct_option']=='optionA'){echo 'selected';} ?>>Option A</option>
+                                                                <option value="optionB" <?php if($row['correct_option']=='optionB'){echo 'selected';} ?>>Option B</option>
+                                                                <option value="optionC" <?php if($row['correct_option']=='optionC'){echo 'selected';} ?>>Option C</option>
+                                                                <option value="optionD" <?php if($row['correct_option']=='optionD'){echo 'selected';} ?>>Option D</option>
                                                             </select>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="course_name">Course Name</label>
-                                                            <input type="text" name="course_name" value="<?= $row['course_name']; ?>" class="form-control" autocomplete="off">
-                                                            <input type="hidden" name="course_id" value="<?= $row['id']; ?>">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="course_code">Course Code</label>
-                                                            <input type="text" name="course_code" value="<?= $row['course_code']; ?>" class="form-control" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="course_status">Course Status</label>
-                                                            <select name="course_status" class="form-control">
-                                                                <option value="A" <?php if($row['course_status']=='A'){echo 'selected';} ?>>Active</option>
-                                                                <option value="I" <?php if($row['course_status']=='I'){echo 'selected';} ?>>Inactive</option>
+                                                            <label for="question_status">Question Status</label>
+                                                            <select name="question_status" class="form-control">
+                                                                <option value="A" <?php if($row['question_status']=='A'){echo 'selected';} ?>>Active</option>
+                                                                <option value="I" <?php if($row['question_status']=='I'){echo 'selected';} ?>>Inactive</option>
                                                             </select>
                                                         </div>
                                                     </div>                                                    
-                                                </div>                                                
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </form>
                             </div>
                         </div>

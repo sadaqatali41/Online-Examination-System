@@ -39,8 +39,22 @@ $user_data = $_SESSION['user_data'];
                     <div class="col-md-12">
                         <div class="box box-info">
                             <div class="box-header">
-                                <div class="box-title">
-                                    <a href="course.php?act=add" class="btn btn-sm btn-info"><i class="fa fa-plus"></i> Add</a>                                    
+                                <div class="box-search">
+                                    <a href="course.php?act=add" class="btn btn-xs btn-info"><i class="fa fa-plus"></i> Add</a>
+                                    <form class="form-inline" style="display: inline;">
+                                        <div class="form-group">
+                                            <select id="cc_id" class="form-control cc_id"></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select name="course_status" id="course_status" class="form-control">
+                                                <option value="">Select Status</option>
+                                                <option value="A">Active</option>
+                                                <option value="I">Inactive</option>
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn btn-info btn-xs" id="search">Search</button>
+                                        <a href="course.php" class="btn btn-default btn-xs">Reset</a>
+                                    </form>                                    
                                 </div>
                             </div>
                             <div style="padding: 10px;">

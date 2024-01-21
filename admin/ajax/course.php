@@ -25,10 +25,19 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $columnName = filter_var($_POST['columns'][$columnIndex]['data'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); // Column name
             $columnSortOrder = filter_var($_POST['order'][0]['dir'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); // asc or desc
             $searchValue = filter_var($_POST['search']['value'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); // Search value
+            #custom filter
+            $cc_id = filter_var($_POST['cc_id'], FILTER_VALIDATE_INT);
+            $course_status = filter_var($_POST['course_status'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
             ## Search
             $searchQuery = " ";
             if ($searchValue != '') {
                 $searchQuery = " AND (c.course_name LIKE '%" . $searchValue . "%' OR c.course_code LIKE '%" . $searchValue . "%' OR cc.cc_name LIKE '%" . $searchValue . "%')";
+            }
+            if(isset($cc_id) && !empty($cc_id)) {
+                $searchQuery .= " AND c.cc_id=" . $cc_id;
+            }
+            if(isset($course_status) && !empty($course_status)) {
+                $searchQuery .= " AND c.course_status='". $course_status ."'";
             }
 
             ## Total number of records without filtering

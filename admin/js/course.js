@@ -1,60 +1,78 @@
 $(function(){
 
-    $('#example').DataTable({
-        "processing": true,
-        "serverSide": true,
-        'serverMethod': 'post',
-        "ajax": {
-            "url": "ajax/course.php",
-            "data": {
-                "act": "course_list"
-            }
-        },
-        "lengthMenu": [25, 50, 75, 100],
-        "drawCallback": function(settings) {
-            $('.edit').tooltip({
-                container: 'body',
-                placement: 'top',
-                title: 'Edit'
-            });
-        },
-        "columns": [{
-            "data": "id"
-        }, {
-            "data": "cc_id"
-        }, {
-            "data": "course_name"
-        }, {
-            "data": "course_code"
-        }, {
-            "data": "course_status",
-            "render": function(data, type, row, cell) {
-                if(data == 'A') {
-                    return '<label class="badge bg-green">Active</label>';
-                } else {
-                    return '<label class="badge bg-red">Inactive</label>';
-                }
-            }
-        }, {
-            "data": null,
-            "render": function(data, type, row, cell) {
-                let manage = ''; 
-                manage += '<div class="btn-group" style="display: flex;">';
-                manage += '<a href="course.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
-                manage += '</div>';
+    var cc_id = '';
+    var course_status = '';
 
-                return manage;
-            }
-        }],
-        "order": [0, 'desc'],
-        "columnDefs": [{
-            'targets': -1,
-            'orderable': false
-        }],
-        dom: 'lBfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'print'
-        ]
+    course_list(cc_id, course_status);
+
+    function course_list(cc_id, course_status) {
+
+        $('#example').DataTable({
+            "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            'destroy': true,
+            "ajax": {
+                "url": "ajax/course.php",
+                "data": {
+                    "act": "course_list",
+                    cc_id,
+                    course_status
+                }
+            },
+            "lengthMenu": [25, 50, 75, 100],
+            "drawCallback": function(settings) {
+                $('.edit').tooltip({
+                    container: 'body',
+                    placement: 'top',
+                    title: 'Edit'
+                });
+            },
+            "columns": [{
+                "data": "id"
+            }, {
+                "data": "cc_id"
+            }, {
+                "data": "course_name"
+            }, {
+                "data": "course_code"
+            }, {
+                "data": "course_status",
+                "render": function(data, type, row, cell) {
+                    if(data == 'A') {
+                        return '<label class="badge bg-green">Active</label>';
+                    } else {
+                        return '<label class="badge bg-red">Inactive</label>';
+                    }
+                }
+            }, {
+                "data": null,
+                "render": function(data, type, row, cell) {
+                    let manage = ''; 
+                    manage += '<div class="btn-group" style="display: flex;">';
+                    manage += '<a href="course.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
+                    manage += '</div>';
+    
+                    return manage;
+                }
+            }],
+            "order": [0, 'desc'],
+            "columnDefs": [{
+                'targets': -1,
+                'orderable': false
+            }],
+            dom: 'lBfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'print'
+            ]
+        });
+    }
+
+    $(document).on('click', '#search', function(){
+        var cc_id = $('#cc_id').val();
+        var course_status = $('#course_status').val();
+
+        course_list(cc_id, course_status);
     });
 
     bind_select2();

@@ -25,10 +25,19 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $columnName = filter_var($_POST['columns'][$columnIndex]['data'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); // Column name
             $columnSortOrder = filter_var($_POST['order'][0]['dir'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); // asc or desc
             $searchValue = filter_var($_POST['search']['value'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); // Search value
+            #custom filter
+            $center_city = filter_var($_POST['center_city'], FILTER_VALIDATE_INT);
+            $center_status = filter_var($_POST['center_status'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
             ## Search
             $searchQuery = " ";
             if ($searchValue != '') {
                 $searchQuery = " AND (c.center_name LIKE '%" . $searchValue . "%' OR c.center_code LIKE '%" . $searchValue . "%' OR ct.name LIKE '%" . $searchValue . "%' OR c.center_address LIKE '%" . $searchValue . "%')";
+            }
+            if(isset($center_city) && !empty($center_city)) {
+                $searchQuery .= " AND c.center_city=" . $center_city;
+            }
+            if(isset($center_status) && !empty($center_status)) {
+                $searchQuery .= " AND c.center_status='". $center_status ."'";
             }
 
             ## Total number of records without filtering

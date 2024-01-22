@@ -1,6 +1,6 @@
 <?php
-include 'header.php';
-include 'menubar.php';
+// include 'header.php';
+// include 'menubar.php';
 
 ?>
 <!DOCTYPE html>
@@ -72,6 +72,6 @@ include 'menubar.php';
 </dl>
 </div>
 </div>
-<?php include 'footer.php'; ?>
+<?php //include 'footer.php'; ?>
 </body>
 </html>

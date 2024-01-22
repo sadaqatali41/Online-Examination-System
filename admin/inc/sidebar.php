@@ -39,6 +39,11 @@
                             <i class="fa fa-circle"></i> <span>Questions</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="<?php print PROJECT_ROOT; ?>admin/eligibility_criteria">
+                            <i class="fa fa-circle"></i> <span>Eligibility Criteria</span>
+                        </a>
+                    </li>
                 </ul>
             </li>        
         </ul>

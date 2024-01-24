@@ -11,6 +11,7 @@
         </form>
         <!-- /.search form -->
         <ul class="sidebar-menu" data-widget="tree">
+            <!-- masters -->
             <li class="treeview">
                 <a href="#">
                     <span>Master</span>
@@ -44,6 +45,22 @@
                             <i class="fa fa-circle"></i> <span>Eligibility Criteria</span>
                         </a>
                     </li>
+                </ul>
+            </li>        
+            <!-- students -->
+            <li class="treeview">
+                <a href="#">
+                    <span>Student</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="<?php print PROJECT_ROOT; ?>admin/student">
+                            <i class="fa fa-circle"></i> <span>Students</span>
+                        </a>
+                    </li>                    
                 </ul>
             </li>        
         </ul>

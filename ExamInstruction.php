@@ -1,6 +1,6 @@
 <?php
 // include 'header.php';
-// include 'menubar.php';
+// include 'menubar.php'; student instructions
 
 ?>
 <!DOCTYPE html>

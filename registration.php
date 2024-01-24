@@ -2,15 +2,15 @@
 include 'header.php';
 include 'menubar.php';
 session_start();
-$con=mysqli_connect('localhost','root');
-mysqli_select_db($con,'online_examination_system');
-$query="SELECT name, value FROM course WHERE course_status = 1 ORDER BY name ASC";
-$query1="SELECT name, value FROM center WHERE center_status = 1 ORDER BY name ASC";
-$result1=mysqli_query($con,$query);
-$result2=mysqli_query($con,$query1);	//Accociative Array represented by Result 
-$num=mysqli_num_rows($result1);
-$num1=mysqli_num_rows($result2);
-mysqli_close($con);
+// $con=mysqli_connect('localhost','root');
+// mysqli_select_db($con,'online_examination_system');
+// $query="SELECT name, value FROM course WHERE course_status = 1 ORDER BY name ASC";
+// $query1="SELECT name, value FROM center WHERE center_status = 1 ORDER BY name ASC";
+// $result1=mysqli_query($con,$query);
+// $result2=mysqli_query($con,$query1);	//Accociative Array represented by Result 
+// $num=mysqli_num_rows($result1);
+// $num1=mysqli_num_rows($result2);
+// mysqli_close($con);
 ?>
 <!DOCTYPE html>
 <html lang="eng">

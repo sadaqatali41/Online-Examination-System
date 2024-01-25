@@ -242,11 +242,17 @@ $(function(){
     });
 
     $(document).on('submit', '#studentAddForm', function(){
-        
+        var formData = new FormData(this);
+        formData.append('act', 'studentAddSubmit');
         $.ajax({
             url: 'ajax/student.php',
             type: 'POST',
-            data: $(this).serialize() + '&' + $.param({'act': 'studentAddSubmit'}),
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
             beforeSend: function() {
                 $('#studentAddFormBtn').html('Loading...').attr('disabled', true);
             },

@@ -92,7 +92,7 @@ $user_data = $_SESSION['user_data'];
                     <div class="col-md-12 col-xs-12 col-sm-12">
                         <div class="box box-info">
                             <div class="box-body">
-                                <form id="studentAddForm">
+                                <form id="studentAddForm" enctype="multipart/form-data">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <a href="student.php" class="btn btn-sm btn-info"><i class="fa fa-list"></i> View</a>
@@ -106,19 +106,19 @@ $user_data = $_SESSION['user_data'];
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <label for="fname">First Name</label>
-                                                            <input type="text" name="fname" id="fname" class="form-control" autocomplete="off">
+                                                            <input type="text" name="fname" id="fname" class="form-control" placeholder="First Name" autocomplete="off">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <label for="lname">Last Name</label>
-                                                            <input type="text" name="lname" id="lname" class="form-control" autocomplete="off">
+                                                            <input type="text" name="lname" id="lname" class="form-control" placeholder="Last Name" autocomplete="off">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="email">Email</label>
-                                                            <input type="email" name="email" id="email" class="form-control" autocomplete="off">
+                                                            <input type="email" name="email" id="email" class="form-control" placeholder="Email" autocomplete="off">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
@@ -130,7 +130,7 @@ $user_data = $_SESSION['user_data'];
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <label for="mobile">Mobile No</label>
-                                                            <input type="text" name="mobile" id="mobile" class="form-control" autocomplete="off">
+                                                            <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Mobile WhatsApp" autocomplete="off">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -156,7 +156,7 @@ $user_data = $_SESSION['user_data'];
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <label for="pin">Pin No</label>
-                                                            <input type="text" name="pin" id="pin" class="form-control" autocomplete="off">
+                                                            <input type="text" name="pin" id="pin" class="form-control" placeholder="Pin Code" autocomplete="off">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
@@ -170,7 +170,7 @@ $user_data = $_SESSION['user_data'];
                                                     <div class="col-md-7">
                                                         <div class="form-group">
                                                             <label for="address">Address</label>
-                                                            <input type="text" name="address" id="address" class="form-control" autocomplete="off">
+                                                            <input type="text" name="address" id="address" class="form-control" placeholder="Address" autocomplete="off">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
@@ -204,6 +204,13 @@ $user_data = $_SESSION['user_data'];
                                                                 <option value="1">Active</option>
                                                                 <option value="0">Inactive</option>
                                                             </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="avatar">Avatar</label>
+                                                            <input type="file" name="avatar" id="avatar" accept=".jpeg, .jpg, .png">
+                                                            <p class="help-block">600X600 pixel with 3MB</p>
                                                         </div>
                                                     </div>
                                                 </div>

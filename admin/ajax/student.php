@@ -355,7 +355,9 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             if($gender === '') {
                 $error[] = 'Gender is required.';
             }
-
+            if(!is_uploaded_file($_FILES['avatar']['tmp_name'])) {
+                $error[] = "Avatar is required.";
+            }
             if(empty($error)) {
                 $stck = $conn->prepare("SELECT s.email, s.phone FROM students s WHERE s.email=? OR s.phone=?");
                 $stck->bind_param("ss", $email, $mobile);
@@ -364,6 +366,37 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 $stck->close();
                 if($resck->num_rows > 0) {
                     $error[] = "Email : {$email} OR Mobile : {$mobile} exists. Please choose another one.";
+                }
+            }
+            if(is_uploaded_file($_FILES['avatar']['tmp_name'])) {
+                $filename = $_FILES["avatar"]["name"];
+				$fileTempName = $_FILES["avatar"]["tmp_name"];
+				$filetype = $_FILES["avatar"]["type"];
+				$filesize = $_FILES["avatar"]["size"];
+				$errorCode = $_FILES["avatar"]["error"];
+                $maxsize = 3 * 1024 * 1024; #3MB
+                $ext = trim(strtolower(pathinfo($filename, PATHINFO_EXTENSION)));
+                $maxWidth = 600;
+                $maxHeight = 600;
+
+                $allowedTypes = array(
+					"JPG" => "image/JPG",
+					"jpg" => "image/jpg",
+					"jpeg" => "image/jpeg",					
+					"png" => "image/png"
+				);
+                if (!in_array($filetype, $allowedTypes)) {
+                    $error[] = "Invalid File type.";
+                }
+                if ($filesize > $maxsize) {
+                    $error[] = "File size is larger than the 3MB.";
+                }
+				if (!array_key_exists($ext, $allowedTypes)) {
+					$error[] = "Please select a valid file format.";
+				}
+                list($img_width, $img_height, $img_type, $img_attr) = getimagesize($fileTempName);
+                if ($img_width > $maxWidth || $img_height > $maxHeight) {
+                    $error[] = "Image should have maximum width of {$maxWidth}px and height of {$maxHeight}px.";
                 }
             }
 
@@ -379,8 +412,27 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                         throw new Exception("Can't insert in student. Reason : " . $stmt->error);
                     }
                     $last_id = $stmt->insert_id;
-                    #profile upload
                     $stmt->close();
+
+                    #profile upload
+                    if(is_uploaded_file($_FILES['avatar']['tmp_name'])) {
+                        $targetPath = "../students/" . $last_id;
+                        if(!is_dir($targetPath)) {
+                            mkdir($targetPath, 0777, true);
+                        }
+                        $avatarName = 'avatar.' . $ext;
+                        if (!move_uploaded_file($fileTempName, $targetPath . '/' . $avatarName)) {
+							throw new Exception("Can't upload avatar. Reason : " . $errorCode);
+						}
+                        #update avatar
+                        $st1 = $conn->prepare("UPDATE students SET avatar=? WHERE id=?");
+                        $st1->bind_param("si", $avatarName, $last_id);
+
+                        if($st1->execute() === false) {
+                            throw new Exception("Can't update student. Reason : " . $st1->error);
+                        }
+                        $st1->close();
+                    }
 
                     if($conn->commit()) {
                         $addRes['status'] = 'success';

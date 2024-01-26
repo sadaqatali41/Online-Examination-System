@@ -17,7 +17,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 
     switch ($act) {
 
-        case "eligibility_criteria_list":
+        case "student_list":
             $draw = filter_var($_POST['draw'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
             $numRow = filter_var($_POST['start'], FILTER_VALIDATE_INT);
             $rowperpage = filter_var($_POST['length'], FILTER_VALIDATE_INT); // Rows display per page
@@ -27,21 +27,25 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $searchValue = filter_var($_POST['search']['value'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); // Search value
             #custom filter
             $course_id = filter_var($_POST['course_id'], FILTER_VALIDATE_INT);
-            $ec_status = filter_var($_POST['ec_status'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+            $center_id = filter_var($_POST['center_id'], FILTER_VALIDATE_INT);
+            $status = filter_var($_POST['status'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
             ## Search
             $searchQuery = " ";
             if ($searchValue != '') {
-                $searchQuery = " AND (cc.course_name LIKE '%" . $searchValue . "%' OR ec.eligibility_criteria LIKE '%" . $searchValue . "%')";
+                $searchQuery = " AND (cs.course_name LIKE '%" . $searchValue . "%' OR ce.center_name LIKE '%" . $searchValue . "%' OR st.fname LIKE '%" . $searchValue . "%' OR st.lname LIKE '%" . $searchValue . "%' OR st.email LIKE '%" . $searchValue . "%' OR st.phone LIKE '%" . $searchValue . "%' OR st.address LIKE '%" . $searchValue . "%' OR c.name LIKE '%" . $searchValue . "%' OR s.name LIKE '%" . $searchValue . "%' OR ct.name LIKE '%" . $searchValue . "%')";
             }
             if(isset($course_id) && !empty($course_id)) {
-                $searchQuery .= " AND ec.course_id=" . $course_id;
+                $searchQuery .= " AND st.course_id=" . $course_id;
             }
-            if(isset($ec_status) && !empty($ec_status)) {
-                $searchQuery .= " AND ec.ec_status='". $ec_status ."'";
+            if(isset($center_id) && !empty($center_id)) {
+                $searchQuery .= " AND st.center_id=" . $center_id;
+            }
+            if($status !== '') {
+                $searchQuery .= " AND st.status='". $status ."'";
             }
 
             ## Total number of records without filtering
-            $stmt = $conn->prepare("SELECT COUNT(ec.id) AS allcount FROM eligibility_criteria ec INNER JOIN courses cc ON cc.id=ec.course_id WHERE 1=1" . $searchQuery);
+            $stmt = $conn->prepare("SELECT COUNT(st.id) AS allcount FROM students st LEFT JOIN courses cs ON cs.id=st.course_id LEFT JOIN centers ce ON ce.id=st.center_id LEFT JOIN cities c ON c.id=st.city LEFT JOIN states s ON s.id=st.state LEFT JOIN countries ct ON ct.id=st.country WHERE 1=1" . $searchQuery);
             $stmt->execute();
             $res = $stmt->get_result();
             $records = $res->fetch_assoc();
@@ -51,7 +55,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $totalRecordwithFilter = $totalRecords;
 
             ## Pagination query
-            $stmt2 = $conn->prepare("SELECT ec.*, cc.course_name FROM eligibility_criteria ec INNER JOIN courses cc ON cc.id=ec.course_id WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
+            $stmt2 = $conn->prepare("SELECT st.id, CONCAT(st.fname, ' ', st.lname) AS full_name, st.email, st.password, st.phone, st.gender, st.course_id, cs.course_name, st.center_id, ce.center_name, st.city, st.pin, st.state, st.country, CONCAT(c.name, ',', s.name, ',', ct.name, ',', st.pin) AS p_address, st.address, st.avatar, st.status FROM students st LEFT JOIN courses cs ON cs.id=st.course_id LEFT JOIN centers ce ON ce.id=st.center_id LEFT JOIN cities c ON c.id=st.city LEFT JOIN states s ON s.id=st.state LEFT JOIN countries ct ON ct.id=st.country WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
             $stmt2->execute();
             $res2 = $stmt2->get_result();
             $row1 = array();
@@ -61,9 +65,17 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 
                     $row1[] = array(
                         "id" => $row['id'],
-                        "course_id" => $row['course_name'],
-                        "eligibility_criteria" => $row['eligibility_criteria'],
-                        "ec_status" => $row['ec_status'],
+                        "full_name" => $row['full_name'],
+                        "email" => $row['email'],
+                        "password" => $row['password'],
+                        "phone" => $row['phone'],
+                        "gender" => $row['gender'],
+                        "course_name" => $row['course_name'],
+                        "center_name" => $row['center_name'],
+                        "p_address" => $row['p_address'],
+                        "address" => $row['address'],
+                        "avatar" => $row['avatar'],
+                        "status" => $row['status'],
                     );
                 }
             }

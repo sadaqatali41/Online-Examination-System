@@ -27,7 +27,7 @@
 	<!-- Google Font -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-black-light sidebar-mini">
+<body class="hold-transition skin-black-light sidebar-mini <?php if(defined('SC')) echo SC; ?>">
     <div class="wrapper">
         <!-- include header -->
         <header class="main-header">

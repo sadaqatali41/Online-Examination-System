@@ -14,6 +14,7 @@ $user_data = $_SESSION['user_data'];
 ?>
 
 <!-- inlude header -->
+<?php define('SC', 'sidebar-collapse'); ?>
 <?php include_once 'inc/header.php'; ?>
 <!-- content wrapper -->
 <div class="content-wrapper">
@@ -46,10 +47,13 @@ $user_data = $_SESSION['user_data'];
                                             <select name="course_id" id="course_id" class="form-control"></select>
                                         </div>
                                         <div class="form-group">
-                                            <select name="ec_status" id="ec_status" class="form-control">
+                                            <select name="center_id" id="center_id" class="form-control"></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select name="status" id="status" class="form-control">
                                                 <option value="">Select Status</option>
-                                                <option value="A">Active</option>
-                                                <option value="I">Inactive</option>
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
                                             </select>
                                         </div>
                                         <button type="button" class="btn btn-info btn-xs" id="search">Search</button>
@@ -62,8 +66,16 @@ $user_data = $_SESSION['user_data'];
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Password</th>
+                                            <th>Mobile No</th>
+                                            <th>Gender</th>
                                             <th>Course Name</th>
-                                            <th>Student</th>                            
+                                            <th>Center Name</th>
+                                            <th>Primary Address</th>
+                                            <th>Full Address</th>
+                                            <th>Avatar</th>
                                             <th>Status</th>
                                             <th>Manage</th>
                                         </tr>

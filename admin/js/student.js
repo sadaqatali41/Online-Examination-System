@@ -1,11 +1,12 @@
 $(function(){
 
     var course_id = '';
-    var ec_status = '';
+    var center_id = '';
+    var status = '';
 
-    eligibility_criteria_list(course_id, ec_status);
+    student_list(course_id, center_id, status);
 
-    function eligibility_criteria_list(course_id, ec_status) {
+    function student_list(course_id, center_id, status) {
 
         $('#example').DataTable({
             "processing": true,
@@ -15,9 +16,10 @@ $(function(){
             "ajax": {
                 "url": "ajax/student.php",
                 "data": {
-                    "act": "eligibility_criteria_list",
+                    "act": "student_list",
                     course_id,
-                    ec_status
+                    center_id, 
+                    status
                 }
             },
             "lengthMenu": [25, 50, 75, 100],
@@ -31,13 +33,43 @@ $(function(){
             "columns": [{
                 "data": "id"
             }, {
-                "data": "course_id"
+                "data": "full_name"
+            },  {
+                "data": "email"
+            },  {
+                "data": "password"
+            },  {
+                "data": "phone"
+            },  {
+                "data": "gender",
+                "render": function(data) {
+                    if(data === 'M') {
+                        return 'Male';
+                    } else {
+                        return 'Female';
+                    }
+                }
+            },  {
+                "data": "course_name"
+            },  {
+                "data": "center_name"
+            },  {
+                "data": "p_address"
+            },  {
+                "data": "address"
+            },  {
+                "data": "avatar",
+                "render": function(data, type, row, cellIndex) {
+                    if(data !== null) {
+                        return '<a target="_blank" href="students/' + row.id + '/' + data + '">Avatar</a>';
+                    } else {
+                        return 'N/A';
+                    }
+                }
             }, {
-                "data": "eligibility_criteria"
-            }, {
-                "data": "ec_status",
+                "data": "status",
                 "render": function(data, type, row, cell) {
-                    if(data == 'A') {
+                    if(data == 1) {
                         return '<label class="badge bg-green">Active</label>';
                     } else {
                         return '<label class="badge bg-red">Inactive</label>';
@@ -68,9 +100,10 @@ $(function(){
 
     $(document).on('click', '#search', function(){
         var course_id = $('#course_id').val();
-        var ec_status = $('#ec_status').val();
+        var center_id = $('#center_id').val();
+        var status = $('#status').val();
 
-        eligibility_criteria_list(course_id, ec_status);
+        student_list(course_id, center_id, status);
     });
 
 

@@ -388,8 +388,8 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 				$errorCode = $_FILES["avatar"]["error"];
                 $maxsize = 3 * 1024 * 1024; #3MB
                 $ext = trim(strtolower(pathinfo($filename, PATHINFO_EXTENSION)));
-                $maxWidth = 600;
-                $maxHeight = 600;
+                $maxWidth = 300;
+                $maxHeight = 300;
 
                 $allowedTypes = array(
 					"JPG" => "image/JPG",
@@ -428,7 +428,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 
                     #profile upload
                     if(is_uploaded_file($_FILES['avatar']['tmp_name'])) {
-                        $targetPath = "../students/" . $last_id;
+                        $targetPath = "../../students/" . $last_id;
                         if(!is_dir($targetPath)) {
                             mkdir($targetPath, 0777, true);
                         }
@@ -464,26 +464,107 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             echo json_encode($addRes);
             break;
 
-        case 'ecEditSubmit':
-            $ec_id = filter_input(INPUT_POST, 'ec_id', FILTER_VALIDATE_INT);
+        case 'studentEditSubmit':
+            $student_id = filter_input(INPUT_POST, 'student_id', FILTER_VALIDATE_INT);
+            $fname = trim(filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_STRING));
+            $lname = trim(filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_STRING));
+            $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING, FILTER_VALIDATE_EMAIL));
+            $password = trim(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING));
+            $mobile = trim(filter_input(INPUT_POST, 'mobile', FILTER_SANITIZE_STRING));
+            $country = filter_input(INPUT_POST, 'country', FILTER_VALIDATE_INT);
+            $state = filter_input(INPUT_POST, 'state', FILTER_VALIDATE_INT);
+            $city = filter_input(INPUT_POST, 'city', FILTER_VALIDATE_INT);
+            $pin = filter_input(INPUT_POST, 'pin', FILTER_VALIDATE_INT);
+            $dob = trim(filter_input(INPUT_POST, 'dob', FILTER_SANITIZE_STRING));
+            $address = trim(filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING));
             $course_id = filter_input(INPUT_POST, 'course_id', FILTER_VALIDATE_INT);
-            $eligibility_criteria = trim(filter_input(INPUT_POST, 'eligibility_criteria', FILTER_SANITIZE_STRING));
-            $ec_status = trim(filter_input(INPUT_POST, 'ec_status', FILTER_SANITIZE_STRING));
+            $center_id = filter_input(INPUT_POST, 'center_id', FILTER_VALIDATE_INT);
+            $gender = trim(filter_input(INPUT_POST, 'gender', FILTER_SANITIZE_STRING));
+            $status = trim(filter_input(INPUT_POST, 'status', FILTER_SANITIZE_STRING));
 
-            if(empty($course_id)) {
-                $error[] = 'Course Name is required.';
+            if(empty($fname)) {
+                $error[] = 'First Name is required.';
             }
-            if(empty($eligibility_criteria)) {
-                $error[] = 'Eligibility Criteria is required.';
+            if(empty($lname)) {
+                $error[] = 'Last Name is required.';
+            }
+            if(empty($email)) {
+                $error[] = 'Email is required.';
+            }
+            if(empty($password)) {
+                $error[] = 'Password is required.';
+            } else if(strlen($password) < 8) {
+                $error[] = "Password should be atleast 8 chars.";
+            }
+            if(empty($mobile)) {
+                $error[] = 'Mobile No. is required.';
+            }
+            if(empty($country)) {
+                $error[] = 'Country is required.';
+            }
+            if(empty($state)) {
+                $error[] = 'State is required.';
+            }
+            if(empty($city)) {
+                $error[] = 'City is required.';
+            }
+            if(empty($pin)) {
+                $error[] = 'Pin No. is required.';
+            }
+            if(empty($dob)) {
+                $error[] = 'DOB is required.';
+            }
+            if(empty($address)) {
+                $error[] = 'Address is required.';
+            }
+            if(empty($course_id)) {
+                $error[] = 'Course is required.';
+            }
+            if(empty($center_id)) {
+                $error[] = 'Center is required.';
+            }
+            if($gender === '') {
+                $error[] = 'Gender is required.';
             }
             if(empty($error)) {
-                $stck = $conn->prepare("SELECT ec.course_id, ec.eligibility_criteria FROM eligibility_criteria ec WHERE ec.course_id=? AND id!=?");
-                $stck->bind_param("ii", $course_id, $ec_id);
+                $stck = $conn->prepare("SELECT s.email, s.phone FROM students s WHERE s.id !=? AND (s.email=? OR s.phone=?)");
+                $stck->bind_param("iss", $student_id, $email, $mobile);
                 $stck->execute();
                 $resck = $stck->get_result();
                 $stck->close();
                 if($resck->num_rows > 0) {
-                    $error[] = "Criteria is already added for selected course. Please `Edit` it.";
+                    $error[] = "Email : {$email} OR Mobile : {$mobile} exists. Please choose another one.";
+                }
+            }
+            if(is_uploaded_file($_FILES['avatar']['tmp_name'])) {
+                $filename = $_FILES["avatar"]["name"];
+				$fileTempName = $_FILES["avatar"]["tmp_name"];
+				$filetype = $_FILES["avatar"]["type"];
+				$filesize = $_FILES["avatar"]["size"];
+				$errorCode = $_FILES["avatar"]["error"];
+                $maxsize = 3 * 1024 * 1024; #3MB
+                $ext = trim(strtolower(pathinfo($filename, PATHINFO_EXTENSION)));
+                $maxWidth = 300;
+                $maxHeight = 300;
+
+                $allowedTypes = array(
+					"JPG" => "image/JPG",
+					"jpg" => "image/jpg",
+					"jpeg" => "image/jpeg",					
+					"png" => "image/png"
+				);
+                if (!in_array($filetype, $allowedTypes)) {
+                    $error[] = "Invalid File type.";
+                }
+                if ($filesize > $maxsize) {
+                    $error[] = "File size is larger than the 3MB.";
+                }
+				if (!array_key_exists($ext, $allowedTypes)) {
+					$error[] = "Please select a valid file format.";
+				}
+                list($img_width, $img_height, $img_type, $img_attr) = getimagesize($fileTempName);
+                if ($img_width > $maxWidth || $img_height > $maxHeight) {
+                    $error[] = "Image should have maximum width of {$maxWidth}px and height of {$maxHeight}px.";
                 }
             }
 
@@ -492,19 +573,38 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 try {
                     $conn->autocommit(false);
 
-                    $stmt = $conn->prepare("UPDATE eligibility_criteria SET course_id=?, eligibility_criteria=?, updated_by=?, ec_status=? WHERE id=?");
-                    $stmt->bind_param("isisi", $course_id, $eligibility_criteria, $user_data['id'], $ec_status, $ec_id);
-                    
+                    $stmt = $conn->prepare("UPDATE students SET fname=?, lname=?, email=?, password=?, gender=?, dob=?, phone=?, course_id=?, center_id=?, country=?, state=?, city=?, pin=?, address=?, status=?, updated_by=? WHERE id=?");
+                    $stmt->bind_param("sssssssiiiiiisisi", $fname, $lname, $email, $password, $gender, $dob, $mobile, $course_id, $center_id, $country, $state, $city, $pin, $address, $status, $user_data['id'], $student_id);
+
                     if($stmt->execute() === false) {
-                        throw new Exception("Can't update eligibility criteria. Reason : " . $stmt->error);
+                        throw new Exception("Can't update student. Reason : " . $stmt->error);
                     }
                     $stmt->close();
 
-                    if($conn->commit()) {
-                        $addRes['status'] = 'success';
-                        $addRes['message'] = 'Success, Eligibility Criteria is updated.';
+                    #profile upload
+                    if(is_uploaded_file($_FILES['avatar']['tmp_name'])) {
+                        $targetPath = "../../students/" . $student_id;
+                        if(!is_dir($targetPath)) {
+                            mkdir($targetPath, 0777, true);
+                        }
+                        $avatarName = 'avatar.' . $ext;
+                        if (!move_uploaded_file($fileTempName, $targetPath . '/' . $avatarName)) {
+							throw new Exception("Can't upload avatar. Reason : " . $errorCode);
+						}
+                        #update avatar
+                        $st1 = $conn->prepare("UPDATE students SET avatar=? WHERE id=?");
+                        $st1->bind_param("si", $avatarName, $student_id);
+
+                        if($st1->execute() === false) {
+                            throw new Exception("Can't update student. Reason : " . $st1->error);
+                        }
+                        $st1->close();
                     }
 
+                    if($conn->commit()) {
+                        $addRes['status'] = 'success';
+                        $addRes['message'] = 'Success, Student is updated.';
+                    }
                 } catch (Exception $th) {
                     $error[] = $th->getMessage();
                     $addRes['status'] = 'error';

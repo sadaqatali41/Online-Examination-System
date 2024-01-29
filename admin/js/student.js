@@ -61,7 +61,7 @@ $(function(){
                 "data": "avatar",
                 "render": function(data, type, row, cellIndex) {
                     if(data !== null) {
-                        return '<a target="_blank" href="students/' + row.id + '/' + data + '">Avatar</a>';
+                        return '<a target="_blank" href="../students/' + row.id + '/' + data + '"><img src="../students/' + row.id + '/' + data + '" class="img-md img-circle"></a>';
                     } else {
                         return 'N/A';
                     }
@@ -309,15 +309,21 @@ $(function(){
         });
         return false;
     });
-
-    $(document).on('submit', '#ecEditForm', function(){
-        
+    
+    $(document).on('submit', '#studentEditForm', function(){
+        var formData = new FormData(this);
+        formData.append('act', 'studentEditSubmit');
         $.ajax({
             url: 'ajax/student.php',
             type: 'POST',
-            data: $(this).serialize() + '&' + $.param({'act': 'ecEditSubmit'}),
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
             beforeSend: function() {
-                $('#ecEditFormBtn').html('Loading...').attr('disabled', true);
+                $('#studentEditFormBtn').html('Loading...').attr('disabled', true);
             },
             success: function(res) {
                 let data = JSON.parse(res);
@@ -327,7 +333,7 @@ $(function(){
                         errors += value + "\r\n";
                     });
                     alert(errors);
-                    $('#ecEditFormBtn').html('Save').attr('disabled', false);
+                    $('#studentEditFormBtn').html('Save').attr('disabled', false);
                 } else {
                     alert(data.message);
                     window.location.reload();
@@ -339,4 +345,5 @@ $(function(){
         });
         return false;
     });
+
 });

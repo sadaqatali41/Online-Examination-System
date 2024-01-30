@@ -26,6 +26,8 @@
 	<script src="../bower_components/fastclick/lib/fastclick.js"></script>
 	<!-- datepicker -->
 	<script src="../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+	<!-- timepicker -->
+	<script src="../plugins/timepicker/bootstrap-timepicker.min.js"></script>
 	<!-- AdminLTE App -->
 	<script src="../dist/js/adminlte.min.js"></script>
 	<!-- AdminLTE for demo purposes -->

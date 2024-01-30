@@ -45,6 +45,11 @@
                             <i class="fa fa-circle"></i> <span>Eligibility Criteria</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="<?php print PROJECT_ROOT; ?>admin/exam_schedule">
+                            <i class="fa fa-circle"></i> <span>Exam Schedule</span>
+                        </a>
+                    </li>
                 </ul>
             </li>        
             <!-- students -->

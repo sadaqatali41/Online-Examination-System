@@ -154,8 +154,9 @@ $user_data = $_SESSION['user_data'];
         case 'edit':
             if(filter_has_var(INPUT_GET, 'id')) {
                 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-                $stmt = $conn->prepare("SELECT ec.*, cc.course_name FROM eligibility_criteria ec INNER JOIN courses cc ON cc.id=ec.course_id WHERE ec.id=?");
-                $stmt->bind_param("i", $id);
+                $for_year = date('Y');
+                $stmt = $conn->prepare("SELECT es.*, cc.course_name FROM exam_schedule es INNER JOIN courses cc ON cc.id=es.course_id WHERE es.id=? AND es.for_year=?");
+                $stmt->bind_param("ii", $id, $for_year);
                 $stmt->execute();
                 $res = $stmt->get_result();
                 $stmt->close();
@@ -169,11 +170,11 @@ $user_data = $_SESSION['user_data'];
             }
         ?>
             <section class="content-header">
-                <h1>Edit Eligibility Criteria</h1>
+                <h1>Edit Exam Schedule</h1>
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li><a href="#">Forms</a></li>
-                    <li class="active">Edit Eligibility Criteria</li>
+                    <li class="active">Edit Exam Schedule</li>
                 </ol>
             </section>
             <!-- main content -->
@@ -182,11 +183,11 @@ $user_data = $_SESSION['user_data'];
                     <div class="col-md-6 col-xs-12 col-sm-12">
                         <div class="box box-info">
                             <div class="box-body">
-                                <form id="ecEditForm">
+                                <form id="examScheduleEditForm">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <a href="exam_schedule.php" class="btn btn-sm btn-info"><i class="fa fa-list"></i> View</a>
-                                            <button type="submit" id="ecEditFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
+                                            <button type="submit" id="examScheduleEditFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -199,29 +200,45 @@ $user_data = $_SESSION['user_data'];
                                                             <select name="course_id" id="course_id" class="form-control">
                                                                 <option value="<?= $row['course_id']; ?>"><?= $row['course_name']; ?></option>
                                                             </select>
-                                                            <input type="hidden" name="ec_id" value="<?= $row['id']; ?>">
+                                                            <input type="hidden" name="es_id" value="<?= $row['id']; ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="regis_last_date">Last Registration Date</label>
+                                                            <input type="text" id="regis_last_date" name="regis_last_date" value="<?= $row['regis_last_date']; ?>" class="form-control" placeholder="YYYY-MM-DD HH:II:SS" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exam_date">Exam Date</label>
+                                                            <input type="text" id="exam_date" name="exam_date" value="<?= $row['exam_date']; ?>" class="form-control" placeholder="YYYY-MM-DD" autocomplete="off">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label for="eligibility_criteria">Eligibility Criteria</label>
-                                                            <textarea name="eligibility_criteria" id="eligibility_criteria" class="form-control" rows="7"><?= $row['eligibility_criteria']; ?></textarea>
+                                                            <label for="start_time">Exam Start Time</label>
+                                                            <input type="text" id="start_time" name="start_time" value="<?= $row['start_time']; ?>" class="form-control" placeholder="HH:II:SS" autocomplete="off">
+                                                        </div>
+                                                    </div>                                                    
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="end_time">Exam End Time</label>
+                                                            <input type="text" id="end_time" name="end_time" value="<?= $row['end_time']; ?>" class="form-control" placeholder="HH:II:SS" autocomplete="off">
                                                         </div>
                                                     </div>
-                                                </div>                                                
-                                                <div class="row">                                                    
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label for="ec_status">EC. Status</label>
-                                                            <select name="ec_status" class="form-control">
-                                                                <option value="A" <?php if($row['ec_status']=='A'){echo 'selected';} ?>>Active</option>
-                                                                <option value="I" <?php if($row['ec_status']=='I'){echo 'selected';} ?>>Inactive</option>
+                                                            <label for="es_status">ES. Status</label>
+                                                            <select name="es_status" class="form-control">
+                                                                <option value="A" <?php if($row['es_status']=='A'){echo 'selected';} ?>>Active</option>
+                                                                <option value="I" <?php if($row['es_status']=='I'){echo 'selected';} ?>>Inactive</option>
                                                             </select>
                                                         </div>
                                                     </div>                                                    
-                                                </div>
+                                                </div>                                                
                                             </div>
                                         </div>
                                     </div>

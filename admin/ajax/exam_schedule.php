@@ -124,24 +124,59 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             echo json_encode($json);
             break;
 
-        case 'ecAddSubmit':
+        case 'examScheduleAddSubmit':
             $course_id = filter_input(INPUT_POST, 'course_id', FILTER_VALIDATE_INT);
-            $eligibility_criteria = trim(filter_input(INPUT_POST, 'eligibility_criteria', FILTER_SANITIZE_STRING));
+            $regis_last_date = trim(filter_input(INPUT_POST, 'regis_last_date', FILTER_SANITIZE_STRING));
+            $exam_date = trim(filter_input(INPUT_POST, 'exam_date', FILTER_SANITIZE_STRING));
+            $start_time = trim(filter_input(INPUT_POST, 'start_time', FILTER_SANITIZE_STRING));
+            $end_time = trim(filter_input(INPUT_POST, 'end_time', FILTER_SANITIZE_STRING));
+            $for_year = date('Y');
 
             if(empty($course_id)) {
                 $error[] = 'Course Name is required.';
             }
-            if(empty($eligibility_criteria)) {
-                $error[] = 'Eligibility Criteria is required.';
+            if(empty($regis_last_date)) {
+                $error[] = 'Last Registration Date is required.';
+            }
+            if(empty($exam_date)) {
+                $error[] = 'Exam Date is required.';
+            }
+            if(empty($start_time)) {
+                $error[] = 'Start Time is required.';
+            }
+            if(empty($end_time)) {
+                $error[] = 'End Time is required.';
             }
             if(empty($error)) {
-                $stck = $conn->prepare("SELECT ec.course_id, ec.eligibility_criteria FROM eligibility_criteria ec WHERE ec.course_id=?");
-                $stck->bind_param("i", $course_id);
+                $ed = new DateTime($exam_date);
+                $rd = new DateTime($regis_last_date);
+                $diff = $rd->diff($ed);
+                $diffInDays = $diff->days;
+                if($diffInDays < 5) {
+                    $error[] = "Exam Date {$exam_date} should be 5 days greater than the Last Registration Date {$regis_last_date}";
+                }
+            }
+            if(empty($error)) {
+                $t1 = new DateTime('2024-01-01 ' . $start_time);
+                $t2 = new DateTime('2024-01-01 ' . $end_time);
+                $interval = $t1->diff($t2);
+                $diffInHours = $interval->h + ($interval->i / 60);
+                if($diffInHours < 2) {
+                    $error[] = "Minimum Diff. between Exam Start Time & Exam End Time should be 2 Hours.";
+                }
+            }
+            if(empty($error)) {
+                $start_time = (new DateTime($start_time))->format('H:i:s');
+                $end_time = (new DateTime($end_time))->format('H:i:s');
+            }
+            if(empty($error)) {
+                $stck = $conn->prepare("SELECT es.id FROM exam_schedule es WHERE es.course_id=? AND es.for_year=?");
+                $stck->bind_param("ii", $course_id, $for_year);
                 $stck->execute();
                 $resck = $stck->get_result();
                 $stck->close();
                 if($resck->num_rows > 0) {
-                    $error[] = "Criteria is already added for selected course. Please `Edit` it.";
+                    $error[] = "Exam Schedule is already added for selected course. Please `Edit` it.";
                 }
             }
 
@@ -150,17 +185,17 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 try {
                     $conn->autocommit(false);
 
-                    $stmt = $conn->prepare("INSERT INTO eligibility_criteria(course_id, eligibility_criteria, created_by) VALUES (?,?,?)");
-                    $stmt->bind_param("isi", $course_id, $eligibility_criteria, $user_data['id']);
+                    $stmt = $conn->prepare("INSERT INTO exam_schedule(course_id, for_year, regis_last_date, exam_date, start_time, end_time, created_by) VALUES (?,?,?,?,?,?,?)");
+                    $stmt->bind_param("iissssi", $course_id, $for_year, $regis_last_date, $exam_date, $start_time, $end_time, $user_data['id']);
 
                     if($stmt->execute() === false) {
-                        throw new Exception("Can't insert in eligibility criteria. Reason : " . $stmt->error);
+                        throw new Exception("Can't insert in exam schedule. Reason : " . $stmt->error);
                     }
                     $stmt->close();
 
                     if($conn->commit()) {
                         $addRes['status'] = 'success';
-                        $addRes['message'] = 'Success, Eligibility Criteria is added.';
+                        $addRes['message'] = 'Success, Exam Schedule is added.';
                     }
                 } catch (Exception $th) {
                     $error[] = $th->getMessage();
@@ -176,26 +211,61 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             echo json_encode($addRes);
             break;
 
-        case 'ecEditSubmit':
-            $ec_id = filter_input(INPUT_POST, 'ec_id', FILTER_VALIDATE_INT);
+        case 'examScheduleEditSubmit':
+            $es_id = filter_input(INPUT_POST, 'es_id', FILTER_VALIDATE_INT);
             $course_id = filter_input(INPUT_POST, 'course_id', FILTER_VALIDATE_INT);
-            $eligibility_criteria = trim(filter_input(INPUT_POST, 'eligibility_criteria', FILTER_SANITIZE_STRING));
-            $ec_status = trim(filter_input(INPUT_POST, 'ec_status', FILTER_SANITIZE_STRING));
+            $regis_last_date = trim(filter_input(INPUT_POST, 'regis_last_date', FILTER_SANITIZE_STRING));
+            $exam_date = trim(filter_input(INPUT_POST, 'exam_date', FILTER_SANITIZE_STRING));
+            $start_time = trim(filter_input(INPUT_POST, 'start_time', FILTER_SANITIZE_STRING));
+            $end_time = trim(filter_input(INPUT_POST, 'end_time', FILTER_SANITIZE_STRING));
+            $es_status = trim(filter_input(INPUT_POST, 'es_status', FILTER_SANITIZE_STRING));
+            $for_year = date('Y');
 
             if(empty($course_id)) {
                 $error[] = 'Course Name is required.';
             }
-            if(empty($eligibility_criteria)) {
-                $error[] = 'Eligibility Criteria is required.';
+            if(empty($regis_last_date)) {
+                $error[] = 'Last Registration Date is required.';
+            }
+            if(empty($exam_date)) {
+                $error[] = 'Exam Date is required.';
+            }
+            if(empty($start_time)) {
+                $error[] = 'Start Time is required.';
+            }
+            if(empty($end_time)) {
+                $error[] = 'End Time is required.';
             }
             if(empty($error)) {
-                $stck = $conn->prepare("SELECT ec.course_id, ec.eligibility_criteria FROM eligibility_criteria ec WHERE ec.course_id=? AND id!=?");
-                $stck->bind_param("ii", $course_id, $ec_id);
+                $ed = new DateTime($exam_date);
+                $rd = new DateTime($regis_last_date);
+                $diff = $rd->diff($ed);
+                $diffInDays = $diff->days;
+                if($diffInDays < 5) {
+                    $error[] = "Exam Date {$exam_date} should be 5 days greater than the Last Registration Date {$regis_last_date}";
+                }
+            }
+            if(empty($error)) {
+                $t1 = new DateTime('2024-01-01 ' . $start_time);
+                $t2 = new DateTime('2024-01-01 ' . $end_time);
+                $interval = $t1->diff($t2);
+                $diffInHours = $interval->h + ($interval->i / 60);
+                if($diffInHours < 2) {
+                    $error[] = "Minimum Diff. between Exam Start Time & Exam End Time should be 2 Hours.";
+                }
+            }
+            if(empty($error)) {
+                $start_time = (new DateTime($start_time))->format('H:i:s');
+                $end_time = (new DateTime($end_time))->format('H:i:s');
+            }
+            if(empty($error)) {
+                $stck = $conn->prepare("SELECT es.id FROM exam_schedule es WHERE es.course_id=? AND es.for_year=? AND es.id <> ?");
+                $stck->bind_param("iii", $course_id, $for_year, $es_id);
                 $stck->execute();
                 $resck = $stck->get_result();
                 $stck->close();
                 if($resck->num_rows > 0) {
-                    $error[] = "Criteria is already added for selected course. Please `Edit` it.";
+                    $error[] = "Exam Schedule is already added for selected course. Please `Edit` it.";
                 }
             }
 
@@ -204,17 +274,17 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 try {
                     $conn->autocommit(false);
 
-                    $stmt = $conn->prepare("UPDATE eligibility_criteria SET course_id=?, eligibility_criteria=?, updated_by=?, ec_status=? WHERE id=?");
-                    $stmt->bind_param("isisi", $course_id, $eligibility_criteria, $user_data['id'], $ec_status, $ec_id);
-                    
+                    $stmt = $conn->prepare("UPDATE exam_schedule SET course_id=?, for_year=?, regis_last_date=?, exam_date=?, start_time=?, end_time=?, updated_by=?, es_status=? WHERE id=?");
+                    $stmt->bind_param("iissssisi", $course_id, $for_year, $regis_last_date, $exam_date, $start_time, $end_time, $user_data['id'], $es_status, $es_id);
+
                     if($stmt->execute() === false) {
-                        throw new Exception("Can't update eligibility criteria. Reason : " . $stmt->error);
+                        throw new Exception("Can't updated exam schedule. Reason : " . $stmt->error);
                     }
                     $stmt->close();
 
                     if($conn->commit()) {
                         $addRes['status'] = 'success';
-                        $addRes['message'] = 'Success, Eligibility Criteria is updated.';
+                        $addRes['message'] = 'Success, Exam Schedule is updated.';
                     }
 
                 } catch (Exception $th) {

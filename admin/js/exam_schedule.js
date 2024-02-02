@@ -110,28 +110,92 @@ $(function(){
         }
     });
 
+    $('#regis_last_date').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm',
+        sideBySide: true,
+        minDate: moment().add(15, 'days'),
+        maxDate: moment().endOf('year'),
+        useCurrent: false,
+        keepInvalid: false
+    }).on('dp.change', function(e){
+        $('#exam_date').val('');
+    });
+
     $('#exam_date').datepicker({
         format: 'yyyy-mm-dd',
         startDate: '+1w',
         autoclose: true
     });
 
+    $(document).on('change', '#exam_date', function(){
+        let exam_date = $(this).val();
+        let regis_last_date = $('#regis_last_date').val() || new Date();
+
+        let d1 = moment(regis_last_date);
+        let d2 = moment(exam_date);
+        let diffInDays = d2.diff(d1, 'days');
+
+        if(diffInDays < 5) {
+            alert(`Exam Date ${exam_date} should be 5 days greater than the Last Registration Date ${regis_last_date}`);
+            $(this).val('');
+        }
+    });
+
     $('#start_time').timepicker({
-        showInputs: false
+        showInputs: false,
+        template: 'dropdown',
+        showMeridian: true,
+        defaultTime: '10:00 AM'
     });
 
     $('#end_time').timepicker({
-        showInputs: false
+        showInputs: false,
+        template: 'dropdown',
+        showMeridian: true,
+        defaultTime: '01:00 PM'
     });
 
-    $(document).on('submit', '#ecAddForm', function(){
+    $(document).on('change', '#start_time, #end_time', function(){
+        fetch_time_diff();
+    });
+
+    function fetch_time_diff() {
+        let start_time = $('#start_time').val();
+        let end_time = $('#end_time').val();
+        if(start_time == '' || end_time == '') {
+            return false;
+        }
+        let t1 = moment(start_time, 'h:mm A').format('HH:mm');
+        let t2 = moment(end_time, 'h:mm A').format('HH:mm');
+        
+        // Example time values
+        var startTime = moment('2024-02-01T' + t1);
+        var endTime = moment('2024-02-01T' + t2);
+
+        // Calculate the difference
+        var duration = moment.duration(endTime.diff(startTime));
+
+        // Get the difference in hours, minutes, and seconds
+        var hours = duration.hours();
+        var minutes = duration.minutes();
+        var seconds = duration.seconds();
+
+        if(hours < 2) {
+            alert('Minimum Diff. between Exam Start Time & Exam End Time should be 2 Hours.');
+            $('#end_time').val('');
+        }
+        // Display the result
+        console.log('Time Difference: ' + hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds');
+    }
+
+    $(document).on('submit', '#examScheduleAddForm', function(){
         
         $.ajax({
             url: 'ajax/exam_schedule.php',
             type: 'POST',
-            data: $(this).serialize() + '&' + $.param({'act': 'ecAddSubmit'}),
+            data: $(this).serialize() + '&' + $.param({'act': 'examScheduleAddSubmit'}),
             beforeSend: function() {
-                $('#ecAddFormBtn').html('Loading...').attr('disabled', true);
+                $('#examScheduleAddFormBtn').html('Loading...').attr('disabled', true);
             },
             success: function(res) {
                 let data = JSON.parse(res);
@@ -141,7 +205,7 @@ $(function(){
                         errors += value + "\r\n";
                     });
                     alert(errors);
-                    $('#ecAddFormBtn').html('Save').attr('disabled', false);
+                    $('#examScheduleAddFormBtn').html('Save').attr('disabled', false);
                 } else {
                     alert(data.message);
                     window.location.reload();
@@ -154,14 +218,14 @@ $(function(){
         return false;
     });
 
-    $(document).on('submit', '#ecEditForm', function(){
+    $(document).on('submit', '#examScheduleEditForm', function(){
         
         $.ajax({
             url: 'ajax/exam_schedule.php',
             type: 'POST',
-            data: $(this).serialize() + '&' + $.param({'act': 'ecEditSubmit'}),
+            data: $(this).serialize() + '&' + $.param({'act': 'examScheduleEditSubmit'}),
             beforeSend: function() {
-                $('#ecEditFormBtn').html('Loading...').attr('disabled', true);
+                $('#examScheduleEditFormBtn').html('Loading...').attr('disabled', true);
             },
             success: function(res) {
                 let data = JSON.parse(res);
@@ -171,7 +235,7 @@ $(function(){
                         errors += value + "\r\n";
                     });
                     alert(errors);
-                    $('#ecEditFormBtn').html('Save').attr('disabled', false);
+                    $('#examScheduleEditFormBtn').html('Save').attr('disabled', false);
                 } else {
                     alert(data.message);
                     window.location.reload();

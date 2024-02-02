@@ -22,12 +22,16 @@
 	<script src="../dist/js/jszip.min.js" defer></script>	
 	<!-- Select2 -->
 	<script src="../bower_components/select2/dist/js/select2.full.min.js"></script>
+	<!-- moment -->
+	<script src="../bower_components/moment/min/moment.min.js"></script>
 	<!-- FastClick -->
 	<script src="../bower_components/fastclick/lib/fastclick.js"></script>
 	<!-- datepicker -->
 	<script src="../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 	<!-- timepicker -->
 	<script src="../plugins/timepicker/bootstrap-timepicker.min.js"></script>
+	<!-- datetimepicker -->
+	<script type="text/javascript" src="..//bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 	<!-- AdminLTE App -->
 	<script src="../dist/js/adminlte.min.js"></script>
 	<!-- AdminLTE for demo purposes -->

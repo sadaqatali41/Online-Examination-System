@@ -37,13 +37,13 @@
         <header class="main-header">
             <a href="<?php print PROJECT_ROOT . "admin/index";?>" class="logo">
                 <span class="logo-mini"><b>OE</b>S</span>
-                <!-- <span class="logo-lg">
-                    <img src="<?php //echo PROJECT_ROOT; ?>img/header.png" alt="my logo">
-                </span> -->
+                <span class="logo-lg">
+                    <b>Online</b>Examination
+                </span>
             </a>
             <nav class="navbar navbar-static-top">
                 <!-- Sidebar toggle button-->
-                <a href="<?php print PROJECT_ROOT . "admin/index";?>" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
                 <div style="display: inline-block;">

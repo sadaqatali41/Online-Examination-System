@@ -54,7 +54,9 @@ $(function(){
             }, {
                 "data": null,
                 "render": function(data, type, row, cell) {
-                    let manage = ''; 
+                    let manage = '';
+                    let currYear = new Date().getFullYear(); 
+                    if(currYear != row['for_year']) return manage;
                     manage += '<div class="btn-group" style="display: flex;">';
                     manage += '<a href="exam_schedule.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
                     manage += '</div>';
@@ -113,7 +115,7 @@ $(function(){
     $('#regis_last_date').datetimepicker({
         format: 'YYYY-MM-DD HH:mm',
         sideBySide: true,
-        minDate: moment().add(15, 'days'),
+        minDate: moment().add(1, 'days'),
         maxDate: moment().endOf('year'),
         useCurrent: false,
         keepInvalid: false

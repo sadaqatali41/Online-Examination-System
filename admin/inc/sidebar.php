@@ -67,7 +67,13 @@
                         </a>
                     </li>                    
                 </ul>
-            </li>        
+            </li>
+            <!-- about us -->
+            <li>
+                <a href="<?php print PROJECT_ROOT; ?>admin/about_us">
+                    <span>About Us</span>
+                </a>
+            </li>
         </ul>
     </section>
 </aside>

@@ -52,17 +52,18 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 while ($row = $res2->fetch_assoc()) {
 
                     $row1[] = array(
-                        "id" => $row['id'],
-                        "name" => $row['name'],
-                        "email" => $row['email'],
-                        "mobile_no" => $row['mobile_no'],
-                        "course_name" => $row['course_name'],
-                        "branch_name" => $row['branch_name'],
-                        "institute_name" => $row['institute_name'],
-                        "city" => $row['city_name'],
-                        "blog_website" => $row['blog_website'],
-                        "status" => $row['status'],
-                        "profile_pic" => $row['profile_pic'],
+                        "id"                => $row['id'],
+                        "name"              => $row['name'],
+                        "email"             => $row['email'],
+                        "mobile_no"         => $row['mobile_no'],
+                        "course_name"       => $row['course_name'],
+                        "branch_name"       => $row['branch_name'],
+                        "institute_name"    => $row['institute_name'],
+                        "city"              => $row['city_name'],
+                        "blog_website"      => $row['blog_website'],
+                        "status"            => $row['status'],
+                        "profile_pic"       => $row['profile_pic'],
+                        "user_id"           => $user_data['id']
                     );
                 }
             }

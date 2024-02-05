@@ -22,7 +22,13 @@ $(function(){
         "columns": [{
             "data": "id"
         }, {
-            "data": "name"
+            "data": "name",
+            "render": function(data, type, row, cellIndex) {
+                if(row.id == row.user_id) {
+                    return '<span class="badge bg-green">' + data + '</span>';
+                }
+                return data;
+            }
         }, {
             "data": "email"
         }, {

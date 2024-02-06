@@ -32,7 +32,7 @@ $(function(){
         var formData = new FormData(this);
         formData.append('act', 'profileUpdateSubmit');
         $.ajax({
-            url: 'ajax/student.php',
+            url: 'ajax/profile.php',
             type: 'POST',
             data: formData,
             async: false,

@@ -14,6 +14,7 @@
             <!-- masters -->
             <li class="treeview">
                 <a href="#">
+                    <i class="fa fa-folder-open"></i>&nbsp;
                     <span>Master</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
@@ -22,32 +23,32 @@
                 <ul class="treeview-menu">
                     <li>
                         <a href="<?php print PROJECT_ROOT; ?>admin/center">
-                            <i class="fa fa-circle"></i> <span>Centers</span>
+                            <i class="fa fa-circle-o"></i> <span>Centers</span>
                         </a>
                     </li> 
                     <li>
                         <a href="<?php print PROJECT_ROOT; ?>admin/course_category">
-                            <i class="fa fa-circle"></i> <span>Course Categories</span>
+                            <i class="fa fa-circle-o"></i> <span>Course Categories</span>
                         </a>
                     </li>
                     <li>
                         <a href="<?php print PROJECT_ROOT; ?>admin/course">
-                            <i class="fa fa-circle"></i> <span>Courses</span>
+                            <i class="fa fa-circle-o"></i> <span>Courses</span>
                         </a>
                     </li>
                     <li>
                         <a href="<?php print PROJECT_ROOT; ?>admin/question">
-                            <i class="fa fa-circle"></i> <span>Questions</span>
+                            <i class="fa fa-circle-o"></i> <span>Questions</span>
                         </a>
                     </li>
                     <li>
                         <a href="<?php print PROJECT_ROOT; ?>admin/eligibility_criteria">
-                            <i class="fa fa-circle"></i> <span>Eligibility Criteria</span>
+                            <i class="fa fa-circle-o"></i> <span>Eligibility Criteria</span>
                         </a>
                     </li>
                     <li>
                         <a href="<?php print PROJECT_ROOT; ?>admin/exam_schedule">
-                            <i class="fa fa-circle"></i> <span>Exam Schedule</span>
+                            <i class="fa fa-circle-o"></i> <span>Exam Schedule</span>
                         </a>
                     </li>
                 </ul>
@@ -55,6 +56,7 @@
             <!-- students -->
             <li class="treeview">
                 <a href="#">
+                    <i class="fa fa-users"></i>&nbsp;
                     <span>Student</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
@@ -63,7 +65,24 @@
                 <ul class="treeview-menu">
                     <li>
                         <a href="<?php print PROJECT_ROOT; ?>admin/student">
-                            <i class="fa fa-circle"></i> <span>Students</span>
+                            <i class="fa fa-circle-o"></i> <span>Students</span>
+                        </a>
+                    </li>                    
+                </ul>
+            </li>
+            <!-- settings -->
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-gears"></i>&nbsp;
+                    <span>Settings</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="<?php print PROJECT_ROOT; ?>admin/email_setting">
+                            <i class="fa fa-circle-o"></i> <span>Email Setting</span>
                         </a>
                     </li>                    
                 </ul>
@@ -71,6 +90,7 @@
             <!-- about us -->
             <li>
                 <a href="<?php print PROJECT_ROOT; ?>admin/about_us">
+                    <i class="fa fa-dashboard"></i>
                     <span>About Us</span>
                 </a>
             </li>

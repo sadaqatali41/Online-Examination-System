@@ -22,6 +22,35 @@ $(function(){
             ccDelArr.push(id);
         }
         $(this).closest('tr').remove();
-        console.log(ccDelArr);
+    });
+
+    $(document).on('submit', '#emailSettingForm', function(){
+        
+        $.ajax({
+            url: 'ajax/email_setting.php',
+            type: 'POST',
+            data: $(this).serialize() + '&' + $.param({'act': 'emailSettingUpdateSubmit', 'del_arr': ccDelArr}),
+            beforeSend: function() {
+                $('#emailSettingFormBtn').html('Loading...').attr('disabled', true);
+            },
+            success: function(res) {
+                let data = JSON.parse(res);
+                if(data.status === 'error') {
+                    let errors = '';
+                    $.each(data.error, function(i, value){
+                        errors += value + "\r\n";
+                    });
+                    alert(errors);
+                    $('#emailSettingFormBtn').html('Save').attr('disabled', false);
+                } else {
+                    alert(data.message);
+                    window.location.reload();
+                }
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+        return false;
     });
 });

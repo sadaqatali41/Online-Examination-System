@@ -84,13 +84,61 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 
                 try {
                     $conn->autocommit(false);
+
+                    #email settings - update
+                    $stmt = $conn->prepare("UPDATE email_settings SET email_subject=?, host_name=?, port_no=?, user_name=?, password=?, smtp_secure=?, from_email=?, from_name=?, email_message=?, updated_by=? WHERE id=?");
+                    $stmt->bind_param("ssissssssii", $email_subject, $host_name, $port_no, $user_name, $password, $smtp_secure, $from_email, $from_name, $email_message, $user_data['id'], $es_id);
+
+                    if($stmt->execute() === false) {
+                        throw new Exception("Can't update Email Settings. Reason : " . $stmt->error);
+                    }
+
+                    #CC email - insert
+                    $stmt1 = $conn->prepare("INSERT INTO cc_email (cc_email, cc_name) VALUES (?,?)");
+                    #CC email - update
+                    $stmt2 = $conn->prepare("UPDATE cc_email SET cc_email=?, cc_name=? WHERE id=?");
+
+                    for($i = 0; $i <= $totItems; $i++) {
+                        if(empty($cc_id[$i])) {
+                            $stmt1->bind_param("ss", $cc_email[$i], $cc_email_name[$i]);
+                            if($stmt1->execute() === false) {
+                                throw new Exception("Can't insert CC Email. Reason : " . $stmt1->error);
+                            }
+                        } else {
+                            $stmt2->bind_param("ssi", $cc_email[$i], $cc_email_name[$i], $cc_id[$i]);
+                            if($stmt2->execute() === false) {
+                                throw new Exception("Can't update CC Email. Reason : " . $stmt2->error);
+                            }
+                        }
+                    }
+
+                    #CC email - delete
+                    if(is_array($del_arr) && count($del_arr)) {
+                        $stmt3 = $conn->prepare("DELETE FROM cc_email WHERE id=?");
+
+                        foreach($del_arr as $del_id) {
+                            $stmt3->bind_param("i", $del_id);
+                            if($stmt3->execute() === false) {
+                                throw new Exception("Can't CC Email. Reason : " . $stmt3->error);
+                            }
+                        }
+                        $stmt3->close();
+                    }
+
+                    $stmt->close();
+                    $stmt1->close();
+                    $stmt2->close();
+
+                    if($conn->commit()) {
+                        $addRes['status'] = 'success';
+                        $addRes['message'] = "Success, Email Settings is updated.";
+                    }
                 } catch (Exception $e) {
                     $error[] = $e->getMessage();
                     $addRes['status'] = 'error';
                     $addRes['error'] = $error;
                     $conn->rollback();
                 }
-
             } else {
                 $addRes['status'] = 'error';
                 $addRes['error'] = $error;

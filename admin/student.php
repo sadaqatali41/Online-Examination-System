@@ -287,135 +287,174 @@ $user_data = $_SESSION['user_data'];
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-wrapper">
-                                                <div class="row">
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="fname">First Name</label>
-                                                            <input type="text" name="fname" id="fname" value="<?= $row['fname']; ?>" class="form-control" placeholder="First Name" autocomplete="off">
-                                                            <input type="hidden" name="student_id" id="student_id" value="<?= $row['id']; ?>">
+                                                <ul class="nav nav-tabs" style="border-bottom: none;">
+                                                    <li class="active">
+                                                        <a href="#student_info" data-toggle="tab" aria-expanded="true">Student Info</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#high_school" data-toggle="tab" aria-expanded="false">High School</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#intermediate" data-toggle="tab" aria-expanded="false">Intermediate</a>
+                                                    </li>                                                    
+                                                    <li>
+                                                        <a href="#graduation" data-toggle="tab" aria-expanded="false">Graduation</a>
+                                                    </li>                                                    
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="tab-content">
+                                                <div class="tab-pane active" id="student_info">
+                                                    <div class="form-wrapper">
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="fname">First Name</label>
+                                                                    <input type="text" name="fname" id="fname" value="<?= $row['fname']; ?>" class="form-control" placeholder="First Name" autocomplete="off">
+                                                                    <input type="hidden" name="student_id" id="student_id" value="<?= $row['id']; ?>">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="lname">Last Name</label>
+                                                                    <input type="text" name="lname" id="lname" value="<?= $row['lname']; ?>" class="form-control" placeholder="Last Name" autocomplete="off">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    <label for="email">Email</label>
+                                                                    <input type="email" name="email" id="email" value="<?= $row['email']; ?>" class="form-control" placeholder="Email" autocomplete="off">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="password">Password</label>
+                                                                    <input type="password" name="password" id="password" value="<?= $row['password']; ?>" class="form-control" placeholder="atleast 8 chars" autocomplete="off">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="mobile">Mobile No</label>
+                                                                    <input type="text" name="mobile" id="mobile" value="<?= $row['phone']; ?>" class="form-control" placeholder="Mobile WhatsApp" autocomplete="off">
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="lname">Last Name</label>
-                                                            <input type="text" name="lname" id="lname" value="<?= $row['lname']; ?>" class="form-control" placeholder="Last Name" autocomplete="off">
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="country">Country</label>
+                                                                    <select name="country" id="country" class="form-control">
+                                                                        <option value="<?= $row['country']; ?>"><?= $row['country_nm']; ?></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="state">State</label>
+                                                                    <select name="state" id="state" class="form-control">
+                                                                        <option value="<?= $row['state']; ?>"><?= $row['state_nm']; ?></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    <label for="city">City</label>
+                                                                    <select name="city" id="city" class="form-control">
+                                                                        <option value="<?= $row['city']; ?>"><?= $row['city_nm']; ?></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="pin">Pin No</label>
+                                                                    <input type="text" name="pin" id="pin" value="<?= $row['pin']; ?>" class="form-control" placeholder="Pin Code" autocomplete="off">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="dob">DOB</label>
+                                                                    <input type="text" name="dob" id="dob" value="<?= $row['dob']; ?>" class="form-control" placeholder="YYYY-MM-DD" autocomplete="off">
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label for="email">Email</label>
-                                                            <input type="email" name="email" id="email" value="<?= $row['email']; ?>" class="form-control" placeholder="Email" autocomplete="off">
+                                                        <div class="row">
+                                                            <div class="col-md-7">
+                                                                <div class="form-group">
+                                                                    <label for="address">Address</label>
+                                                                    <input type="text" name="address" id="address" value="<?= $row['address']; ?>" class="form-control" placeholder="Address" autocomplete="off">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="course_id">Course</label>
+                                                                    <select name="course_id" id="course_id" class="form-control">
+                                                                        <option value="<?= $row['course_id']; ?>"><?= $row['course_name']; ?></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="center_id">Center</label>
+                                                                    <select name="center_id" id="center_id" class="form-control">
+                                                                        <option value="<?= $row['center_id']; ?>"><?= $row['center_name']; ?></option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="password">Password</label>
-                                                            <input type="password" name="password" id="password" value="<?= $row['password']; ?>" class="form-control" placeholder="atleast 8 chars" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="mobile">Mobile No</label>
-                                                            <input type="text" name="mobile" id="mobile" value="<?= $row['phone']; ?>" class="form-control" placeholder="Mobile WhatsApp" autocomplete="off">
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="gender">Gender</label>
+                                                                    <select name="gender" id="gender" class="form-control">
+                                                                        <option value="">Choose Gender</option>
+                                                                        <option value="M" <?php if($row['gender']=='M'){echo 'selected';} ?>>Male</option>
+                                                                        <option value="F" <?php if($row['gender']=='F'){echo 'selected';} ?>>Female</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="form-group">
+                                                                    <label for="status">Status</label>
+                                                                    <select name="status" id="status" class="form-control">
+                                                                        <option value="1" <?php if($row['status']=='1'){echo 'selected';} ?>>Active</option>
+                                                                        <option value="0" <?php if($row['status']=='0'){echo 'selected';} ?>>Inactive</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    <label for="avatar">Avatar</label>
+                                                                    <input type="file" name="avatar" id="avatar" accept=".jpeg, .jpg, .png">
+                                                                    <p class="help-block">300X300 pixel with 3MB</p>
+                                                                </div>
+                                                            </div>
+                                                            <?php if($row['avatar'] !== null) : ?>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    <img class="img-lg img-circle" src="../students/<?php echo $row['id'] . '/' . $row['avatar']; ?>" alt="Profile" srcset="">
+                                                                </div>
+                                                            </div>
+                                                            <?php endif; ?>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="country">Country</label>
-                                                            <select name="country" id="country" class="form-control">
-                                                                <option value="<?= $row['country']; ?>"><?= $row['country_nm']; ?></option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="state">State</label>
-                                                            <select name="state" id="state" class="form-control">
-                                                                <option value="<?= $row['state']; ?>"><?= $row['state_nm']; ?></option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label for="city">City</label>
-                                                            <select name="city" id="city" class="form-control">
-                                                                <option value="<?= $row['city']; ?>"><?= $row['city_nm']; ?></option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="pin">Pin No</label>
-                                                            <input type="text" name="pin" id="pin" value="<?= $row['pin']; ?>" class="form-control" placeholder="Pin Code" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="dob">DOB</label>
-                                                            <input type="text" name="dob" id="dob" value="<?= $row['dob']; ?>" class="form-control" placeholder="YYYY-MM-DD" autocomplete="off">
-                                                        </div>
+                                                <div class="tab-pane" id="high_school">
+                                                    <div class="form-wrapper">
+                                                        <h1>High School</h1>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-md-7">
-                                                        <div class="form-group">
-                                                            <label for="address">Address</label>
-                                                            <input type="text" name="address" id="address" value="<?= $row['address']; ?>" class="form-control" placeholder="Address" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="course_id">Course</label>
-                                                            <select name="course_id" id="course_id" class="form-control">
-                                                                <option value="<?= $row['course_id']; ?>"><?= $row['course_name']; ?></option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="center_id">Center</label>
-                                                            <select name="center_id" id="center_id" class="form-control">
-                                                                <option value="<?= $row['center_id']; ?>"><?= $row['center_name']; ?></option>
-                                                            </select>
-                                                        </div>
+                                                <div class="tab-pane" id="intermediate">
+                                                    <div class="form-wrapper">
+                                                        <h1>Intermediate</h1>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="gender">Gender</label>
-                                                            <select name="gender" id="gender" class="form-control">
-                                                                <option value="">Choose Gender</option>
-                                                                <option value="M" <?php if($row['gender']=='M'){echo 'selected';} ?>>Male</option>
-                                                                <option value="F" <?php if($row['gender']=='F'){echo 'selected';} ?>>Female</option>
-                                                            </select>
-                                                        </div>
+                                                <div class="tab-pane" id="graduation">
+                                                    <div class="form-wrapper">
+                                                        <h1>Graduation</h1>
                                                     </div>
-                                                    <div class="col-md-2">
-                                                        <div class="form-group">
-                                                            <label for="status">Status</label>
-                                                            <select name="status" id="status" class="form-control">
-                                                                <option value="1" <?php if($row['status']=='1'){echo 'selected';} ?>>Active</option>
-                                                                <option value="0" <?php if($row['status']=='0'){echo 'selected';} ?>>Inactive</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label for="avatar">Avatar</label>
-                                                            <input type="file" name="avatar" id="avatar" accept=".jpeg, .jpg, .png">
-                                                            <p class="help-block">300X300 pixel with 3MB</p>
-                                                        </div>
-                                                    </div>
-                                                    <?php if($row['avatar'] !== null) : ?>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <img class="img-lg img-circle" src="../students/<?php echo $row['id'] . '/' . $row['avatar']; ?>" alt="Profile" srcset="">
-                                                        </div>
-                                                    </div>
-                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                         </div>

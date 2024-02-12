@@ -21,6 +21,8 @@ $(function(){
         "columns": [{
             "data": "id"
         }, {
+            "data": "cc_code"
+        }, {
             "data": "cc_name"
         }, {
             "data": "created_by"

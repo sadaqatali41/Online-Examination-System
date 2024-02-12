@@ -46,6 +46,7 @@ $user_data = $_SESSION['user_data'];
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Code</th>
                                             <th>Name</th>
                                             <th>Created By</th>
                                             <th>Updated By</th>

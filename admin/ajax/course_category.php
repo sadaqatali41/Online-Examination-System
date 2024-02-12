@@ -53,6 +53,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                     $row1[] = array(
                         "id" => $row['id'],
                         "cc_name" => $row['cc_name'],
+                        "cc_code" => $row['cc_code'],
                         "name" => $row['name'],
                         "created_by" => $row['name'],
                         "updated_by" => $row['u_name'],

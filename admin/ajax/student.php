@@ -465,7 +465,9 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             break;
 
         case 'studentEditSubmit':
+            #student info
             $student_id = filter_input(INPUT_POST, 'student_id', FILTER_VALIDATE_INT);
+            $cc_code = filter_input(INPUT_POST, 'cc_code', FILTER_SANITIZE_STRING);
             $fname = trim(filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_STRING));
             $lname = trim(filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_STRING));
             $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING, FILTER_VALIDATE_EMAIL));
@@ -481,6 +483,28 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $center_id = filter_input(INPUT_POST, 'center_id', FILTER_VALIDATE_INT);
             $gender = trim(filter_input(INPUT_POST, 'gender', FILTER_SANITIZE_STRING));
             $status = trim(filter_input(INPUT_POST, 'status', FILTER_SANITIZE_STRING));
+
+            #high school
+            $school_name = filter_input(INPUT_POST, 'school_name', FILTER_SANITIZE_STRING);
+            $board_name = filter_input(INPUT_POST, 'board_name', FILTER_SANITIZE_STRING);
+            $roll_no = filter_input(INPUT_POST, 'roll_no', FILTER_VALIDATE_INT);
+            $yop = filter_input(INPUT_POST, 'yop', FILTER_VALIDATE_INT);
+            $percent = filter_input(INPUT_POST, 'percent', FILTER_VALIDATE_INT);
+
+            #intermediate
+            $college_name = filter_input(INPUT_POST, 'college_name', FILTER_SANITIZE_STRING);
+            $im_board_name = filter_input(INPUT_POST, 'im_board_name', FILTER_SANITIZE_STRING);
+            $im_roll_no = filter_input(INPUT_POST, 'im_roll_no', FILTER_VALIDATE_INT);
+            $im_yop = filter_input(INPUT_POST, 'im_yop', FILTER_VALIDATE_INT);
+            $im_percent = filter_input(INPUT_POST, 'im_percent', FILTER_VALIDATE_INT);
+
+            #graduation
+            $institute_name = filter_input(INPUT_POST, 'institute_name', FILTER_SANITIZE_STRING);
+            $course_name = filter_input(INPUT_POST, 'course_name', FILTER_SANITIZE_STRING);
+            $branch_name = filter_input(INPUT_POST, 'branch_name', FILTER_SANITIZE_STRING);
+            $enroll_no = filter_input(INPUT_POST, 'enroll_no', FILTER_VALIDATE_INT);
+            $gd_yop = filter_input(INPUT_POST, 'gd_yop', FILTER_VALIDATE_INT);
+            $aggregate_percent = filter_input(INPUT_POST, 'aggregate_percent', FILTER_VALIDATE_INT);
 
             if(empty($fname)) {
                 $error[] = 'First Name is required.';
@@ -525,6 +549,92 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             }
             if($gender === '') {
                 $error[] = 'Gender is required.';
+            }
+            #high school validation
+            if(empty($error)) {
+                if(empty($school_name)) {
+                    $error[] = "High School : School Name is required.";
+                }
+                if(empty($board_name)) {
+                    $error[] = "High School : Board Name is required.";
+                }
+                if(empty($roll_no)) {
+                    $error[] = "High School : Roll No is required.";
+                }
+                if(empty($yop)) {
+                    $error[] = "High School : Year of Passing is required.";
+                }
+                if(empty($percent)) {
+                    $error[] = "High School : Passing % is required.";
+                }
+                if($percent >= 100) {
+                    $error[] = "High School : Passing % can not be greater or equal to 100.";
+                }
+            }
+            #intermediate validation
+            if(empty($error)) {
+                if(empty($college_name)) {
+                    $error[] = "Intermediate : College Name is required.";
+                }
+                if(empty($im_board_name)) {
+                    $error[] = "Intermediate : Board Name is required.";
+                }
+                if(empty($im_roll_no)) {
+                    $error[] = "Intermediate : Roll No is required.";
+                }
+                if(empty($im_yop)) {
+                    $error[] = "Intermediate : Year of Passing is required.";
+                }
+                if($im_yop < ($yop + 2)) {
+                    $error[] = "Intermediate : Year of Passing {$im_yop} should be greater than the High School Year of Passing {$yop} by 2.";
+                }
+                if(empty($im_percent)) {
+                    $error[] = "Intermediate : Passing % is required.";
+                }
+                if($im_percent >= 100) {
+                    $error[] = "Intermediate : Passing % can not be greater or equal to 100.";
+                }
+            }
+            #graduation validation
+            if(empty($error) && $cc_code !== 'UG') {
+                if(empty($institute_name)) {
+                    $error[] = "Graduation : Institute Name is required.";
+                }
+                if(empty($course_name)) {
+                    $error[] = "Graduation : Course Name is required.";
+                }
+                if(empty($branch_name)) {
+                    $error[] = "Graduation : Branch Name is required.";
+                }
+                if(empty($enroll_no)) {
+                    $error[] = "Graduation : Enroll No is required.";
+                }
+                if(empty($gd_yop)) {
+                    $error[] = "Graduation : Year of Passing is required.";
+                }
+                if($gd_yop < ($im_yop + 3)) {
+                    $error[] = "Graduation : Year of Passing {$gd_yop} should be greater than the Intermediate Year of Passing {$im_yop} by 3.";
+                }
+                if(empty($aggregate_percent)) {
+                    $error[] = "Graduation : Passing % is required.";
+                }
+                if($aggregate_percent >= 100) {
+                    $error[] = "Graduation : Passing % can not be greater or equal to 100.";
+                }
+            }
+            if(empty($error)) {
+                $sthig = $conn->prepare("SELECT hs.student_id, hs.roll_no, 'High School' AS school FROM highschool hs WHERE hs.student_id!=? AND hs.roll_no=?
+                UNION ALL
+                SELECT im.student_id, im.roll_no, 'Intermediate' AS school FROM intermediate im WHERE im.student_id!=? AND im.roll_no=?
+                UNION ALL
+                SELECT gd.student_id, gd.enroll_no AS roll_no, 'Graduation' AS school FROM graduation gd WHERE gd.student_id!=? AND gd.enroll_no=?");
+                $sthig->bind_param("iiiiii", $student_id, $roll_no, $student_id, $im_roll_no, $student_id, $enroll_no);
+                $sthig->execute();
+                $reshig = $sthig->get_result();
+                $sthig->close();
+                while($rowhig = $reshig->fetch_assoc()) {
+                    $error[] = "This Roll No {$rowhig['roll_no']} is already taken in {$rowhig['school']}";
+                }
             }
             if(empty($error)) {
                 $stck = $conn->prepare("SELECT s.email, s.phone FROM students s WHERE s.id !=? AND (s.email=? OR s.phone=?)");

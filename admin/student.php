@@ -342,6 +342,7 @@ $user_data = $_SESSION['user_data'];
                                                                     <label for="fname">First Name</label>
                                                                     <input type="text" name="fname" id="fname" value="<?= $row['fname']; ?>" class="form-control" placeholder="First Name" autocomplete="off">
                                                                     <input type="hidden" name="student_id" id="student_id" value="<?= $row['id']; ?>">
+                                                                    <input type="hidden" name="cc_code" id="cc_code" value="<?= $row['cc_code']; ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-2">

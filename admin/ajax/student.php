@@ -309,7 +309,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
         case 'studentAddSubmit':
             $fname = trim(filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_STRING));
             $lname = trim(filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_STRING));
-            $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING, FILTER_VALIDATE_EMAIL));
+            $email = strtolower(trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING, FILTER_VALIDATE_EMAIL)));
             $password = trim(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING));
             $mobile = trim(filter_input(INPUT_POST, 'mobile', FILTER_SANITIZE_STRING));
             $country = filter_input(INPUT_POST, 'country', FILTER_VALIDATE_INT);
@@ -470,7 +470,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $cc_code = filter_input(INPUT_POST, 'cc_code', FILTER_SANITIZE_STRING);
             $fname = trim(filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_STRING));
             $lname = trim(filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_STRING));
-            $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING, FILTER_VALIDATE_EMAIL));
+            $email = strtolower(trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING, FILTER_VALIDATE_EMAIL)));
             $password = trim(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING));
             $mobile = trim(filter_input(INPUT_POST, 'mobile', FILTER_SANITIZE_STRING));
             $country = filter_input(INPUT_POST, 'country', FILTER_VALIDATE_INT);
@@ -623,6 +623,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 }
             }
             if(empty($error)) {
+                #high school intermediate and graduation
                 $sthig = $conn->prepare("SELECT hs.student_id, hs.roll_no, 'High School' AS school FROM highschool hs WHERE hs.student_id!=? AND hs.roll_no=?
                 UNION ALL
                 SELECT im.student_id, im.roll_no, 'Intermediate' AS school FROM intermediate im WHERE im.student_id!=? AND im.roll_no=?
@@ -709,6 +710,98 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                             throw new Exception("Can't update student. Reason : " . $st1->error);
                         }
                         $st1->close();
+                    }
+
+                    #high school - fetch
+                    $sthsf = $conn->prepare("SELECT hs.id FROM highschool hs WHERE hs.student_id=?");
+                    $sthsf->bind_param("i", $student_id);
+
+                    if($sthsf->execute() === false) {
+                        throw new Exception("Can't fetch High School Info. Reason : " . $sthsf->error);
+                    }
+                    $reshsf = $sthsf->get_result();
+                    $sthsf->close();
+
+                    #high school - update
+                    $sthsu = $conn->prepare("UPDATE highschool SET roll_no=?, school_name=?, board_name=?, yop=?, percent=?, updated_by=? WHERE student_id=?");
+
+                    #high school - insert
+                    $sthsi = $conn->prepare("INSERT INTO highschool(student_id, roll_no, school_name, board_name, yop, percent, created_by) VALUES (?,?,?,?,?,?,?)");
+
+                    if($reshsf->num_rows > 0) {
+                        $sthsu->bind_param("issiiii", $roll_no, $school_name, $board_name, $yop, $percent, $user_data['id'], $student_id);
+                        if($sthsu->execute() === false) {
+                            throw new Exception("Can't update High School Info. Reason : " . $sthsu->error);
+                        }
+                    } else {
+                        $sthsi->bind_param("iissiii", $student_id, $roll_no, $school_name, $board_name, $yop, $percent, $user_data['id']);
+                        if($sthsi->execute() === false) {
+                            throw new Exception("Can't insert in High School. Reason : " . $sthsi->error);
+                        }
+                    }
+                    $sthsu->close();
+                    $sthsi->close();
+
+                    #intermediate - fetch
+                    $stimf = $conn->prepare("SELECT im.id FROM `intermediate` im WHERE im.student_id=?");
+                    $stimf->bind_param("i", $student_id);
+
+                    if($stimf->execute() === false) {
+                        throw new Exception("Can't fetch Intermediate Info. Reason : " . $stimf->error);
+                    }
+                    $resimf = $stimf->get_result();
+                    $stimf->close();
+
+                    #intermediate - update
+                    $stimu = $conn->prepare("UPDATE `intermediate` SET roll_no=?, college_name=?, board_name=?, yop=?, percent=?, updated_by=? WHERE student_id=?");
+
+                    #intermediate - insert
+                    ($stimi = $conn->prepare("INSERT INTO `intermediate`(student_id, roll_no, college_name, board_name, yop, percent, created_by) VALUES (?,?,?,?,?,?,?)")) ? $stimi : throw new Exception($conn->error);
+
+                    if($resimf->num_rows > 0) {
+                        $stimu->bind_param("issiiii", $im_roll_no, $college_name, $im_board_name, $im_yop, $im_percent, $user_data['id'], $student_id);
+                        if($stimu->execute() === false) {
+                            throw new Exception("Can't update Intermediate Info. Reason : " . $stimu->error);
+                        }
+                    } else {
+                        $stimi->bind_param("iissiii", $student_id, $im_roll_no, $college_name, $im_board_name, $im_yop, $im_percent, $user_data['id']);
+                        if($stimi->execute() === false) {
+                            throw new Exception("Can't insert in Intermediate. Reason : " . $stimi->error);
+                        }
+                    }
+                    $stimu->close();
+                    $stimi->close();
+
+                    if($cc_code !== 'UG') {
+                        #graduation - fetch
+                        $stgdf = $conn->prepare("SELECT gd.id FROM graduation gd WHERE gd.student_id=?");
+                        $stgdf->bind_param("i", $student_id);
+
+                        if($stgdf->execute() === false) {
+                            throw new Exception("Can't fetch Graduation Info. Reason : " . $stgdf->error);
+                        }
+                        $resgdf = $stgdf->get_result();
+                        $stgdf->close();
+
+                        #graduation - update
+                        $stgdu = $conn->prepare("UPDATE graduation SET enroll_no=?, institute_name=?, branch_name=?, yop=?, aggregate_percent=?, course_name=?, updated_by=? WHERE student_id=?");
+
+                        #graduation - insert
+                        $stgdi = $conn->prepare("INSERT INTO graduation(student_id, enroll_no, institute_name, branch_name, yop, aggregate_percent, course_name, created_by) VALUES (?,?,?,?,?,?,?,?)");
+
+                        if($resgdf->num_rows > 0) {
+                            $stgdu->bind_param("issiisii", $enroll_no, $institute_name, $branch_name, $gd_yop, $aggregate_percent, $course_name, $user_data['id'], $student_id);
+                            if($stgdu->execute() === false) {
+                                throw new Exception("Can't update Graduation Info. Reason : " . $stgdu->error);
+                            }
+                        } else {
+                            $stgdi->bind_param("iissiisi", $student_id, $enroll_no, $institute_name, $branch_name, $gd_yop, $aggregate_percent, $course_name, $user_data['id']);
+                            if($stgdi->execute() === false) {
+                                throw new Exception("Can't insert in Graduation. Reason : " . $stgdi->error);
+                            }
+                        }
+                        $stgdu->close();
+                        $stgdi->close();
                     }
 
                     if($conn->commit()) {

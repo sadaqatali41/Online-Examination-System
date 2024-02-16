@@ -57,4 +57,12 @@ class Dashboard {
         $stmt->close();
         return $res->num_rows;
     }
+
+    public static function totalUsers($conn) {
+        $stmt = $conn->prepare("SELECT c.id FROM admin_login c WHERE 1");
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $stmt->close();
+        return $res->num_rows;
+    }
 }

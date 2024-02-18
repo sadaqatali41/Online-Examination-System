@@ -128,7 +128,7 @@ $user_data = $_SESSION['user_data'];
             <div class="info-box">
               <span class="info-box-icon bg-aqua"><i class="fa fa-user-plus"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Students</span>
+                <span class="info-box-text">Users</span>
                 <span class="info-box-number"><?= Dashboard::totalUsers($conn); ?></span>
               </div>
               <div class="info-button">

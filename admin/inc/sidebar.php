@@ -85,6 +85,11 @@
                             <i class="fa fa-circle-o"></i> <span>Email Setting</span>
                         </a>
                     </li>                    
+                    <li>
+                        <a href="<?php print PROJECT_ROOT; ?>admin/logo_setting">
+                            <i class="fa fa-circle-o"></i> <span>Logo Setting</span>
+                        </a>
+                    </li>                    
                 </ul>
             </li>
             <!-- about us -->

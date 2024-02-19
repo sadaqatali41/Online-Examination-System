@@ -39,7 +39,7 @@ $rowp = $resp->fetch_assoc();
                     <div class="box-body">
                         <form id="logoSettingForm" enctype="multipart/form-data">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     <button type="submit" id="logoSettingFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
                                 </div>
                             </div>
@@ -55,6 +55,15 @@ $rowp = $resp->fetch_assoc();
                                                 </div>
                                             </div>                                            
                                         </div>
+                                        <?php if($rowp['university_logo'] !== null) : ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <img src="logos/<?= $rowp['university_logo']; ?>" alt="University Logo" srcset="">
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                        <?php endif; ?>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -63,7 +72,16 @@ $rowp = $resp->fetch_assoc();
                                                     <p class="help-block">300X300 pixel with 3MB</p>
                                                 </div>
                                             </div>
-                                        </div>                                                
+                                        </div>
+                                        <?php if($rowp['exam_controller_logo'] !== null) : ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <img src="logos/<?= $rowp['exam_controller_logo']; ?>" style="height: 13rem;" alt="University Logo" srcset="">
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>                                
                             </div>

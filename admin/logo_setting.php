@@ -38,7 +38,7 @@ $rowp = $resp->fetch_assoc();
                 <div class="box box-info">
                     <div class="box-body">
                         <form id="logoSettingForm" enctype="multipart/form-data">
-                            <div class="row">
+                            <div class="row no-pad">
                                 <div class="col-md-8">
                                     <button type="submit" id="logoSettingFormBtn" class="btn btn-primary btn-sm pull-right">Save</button>
                                 </div>
@@ -52,6 +52,7 @@ $rowp = $resp->fetch_assoc();
                                                     <label for="uni_logo">University Logo</label>
                                                     <input type="file" id="uni_logo" name="uni_logo" accept=".jpg, .png, ,jpeg">
                                                     <p class="help-block">670X145 pixel with 3MB</p>
+                                                    <input type="hidden" name="ls_id" value="<?= $rowp['id']; ?>">
                                                 </div>
                                             </div>                                            
                                         </div>

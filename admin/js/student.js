@@ -29,6 +29,16 @@ $(function(){
                     placement: 'top',
                     title: 'Edit'
                 });
+                $('.admitCard').tooltip({
+                    container: 'body',
+                    placement: 'top',
+                    title: 'Admit Card'
+                });
+                $('.studentDetail').tooltip({
+                    container: 'body',
+                    placement: 'top',
+                    title: 'Student Detail'
+                });
             },
             "columns": [{
                 "data": "id"
@@ -81,6 +91,8 @@ $(function(){
                     let manage = ''; 
                     manage += '<div class="btn-group" style="display: flex;">';
                     manage += '<a href="student.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
+                    manage += '<button type="button" class="btn btn-xs bg-maroon admitCard" data-id="' + row.id + '"><i class="fa fa-file-pdf-o"></i></button>';
+                    manage += '<button type="button" class="btn btn-xs bg-purple studentDetail" data-id="' + row.id + '"><i class="fa fa-file-pdf-o"></i></button>';
                     manage += '</div>';
     
                     return manage;

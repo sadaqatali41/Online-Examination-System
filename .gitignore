@@ -2,3 +2,4 @@
 /plugins
 /dist
 /vendor
+/admin/class/TCPDF

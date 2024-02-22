@@ -86,6 +86,20 @@ $user_data = $_SESSION['user_data'];
                     </div>
                 </div>
             </section>
+            <!-- PDF modal -->
+            <div class="modal fade" id="studentPdfModal" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title" id="studentModalTitle">Student PDF</h4>
+                        </div>
+                        <div class="modal-body">
+                            <iframe id="pdfIframe" style="height: 500px; width: 100%;"></iframe>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
         <?php
             break;
         case 'add':

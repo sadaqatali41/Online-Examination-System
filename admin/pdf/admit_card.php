@@ -65,7 +65,7 @@ if(filter_has_var(INPUT_GET, 'id') && filter_input(INPUT_GET, 'id', FILTER_VALID
     echo '<h2>Not Found.</h2>';exit;
 }
 
-$html .= '<table border="1">';
+$html .= '<table border="1" cellpadding="5">';
 $html .= '<thead>';
 $html .= '<tr style="background-color: #d9edf7;">';
 $html .= '<th colspan="4" style="font-size: 25px; text-align: center;">ONLINE EXAMINATION SYSTEM</th>';
@@ -75,8 +75,9 @@ $html .= '</tr>';
 $style = array(
     'position' => 'R',
     'border' => 0,
-    'vpadding' => 'auto',
-    'hpadding' => 'auto',
+    // 'vpadding' => '0',
+    // 'hpadding' => '0',
+    'padding' => 0,
     'fgcolor' => array(0,0,0),
     'bgcolor' => false,     #array(255,255,255)
     'module_width' => 1,    #width of a single module in points
@@ -88,12 +89,26 @@ $html .= '<td colspan="3">';
 $html .= '<img src="../logos/university_logo.jpg" alt="Logo" />';
 $html .= '</td>';
 $html .= '<td>';
-// $pdf->write2DBarcode('Sadaqat Ali Annabi', 'QRCODE,L', null, null, 50, 50, $style, 'N');
-$params = $pdf->serializeTCPDFtagParameters(array('Test', 'QRCODE,L', '', '', 50, 50, $style, 'N'));
-$html .= '<tcpdf method="write2DBarcode" params="' . $params . '" />';
+// $params = $pdf->serializeTCPDFtagParameters(array('Test', 'QRCODE,L', '', '', 50, 35, $style, 'N'));
+// $html .= '<tcpdf method="write2DBarcode" params="' . $params . '" />';
 $html .= '</td>';
 $html .= '</tr>';
+
+$html .= '<tr style="font-size: 18px; background-color: #dff0d8; font-weight: bold;">';
+$html .= '<th style="text-align: center;">Center Code: 1234</th>';
+$html .= '<th colspan="2" style="text-align: center;">Student Admit Card</th>';
+$html .= '<th><span style="font-style: italic;">R.No.</span> 125670</th>';
+$html .= '</tr>';
 $html .= '</thead>';
+#tbody
+$html .= '<tbody>';
+$html .= '<tr>';
+$html .= '<th>First Name :</th>';
+$html .= '<td>Enayat</td>';
+$html .= '<th>Last Name :</th>';
+$html .= '<td>Ali</td>';
+$html .= '</tr>';
+$html .= '</tbody>';
 $html .= '</table>';
 
 ob_end_clean();

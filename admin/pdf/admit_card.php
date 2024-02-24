@@ -89,8 +89,8 @@ $html .= '<td colspan="3">';
 $html .= '<img src="../logos/university_logo.jpg" alt="Logo" />';
 $html .= '</td>';
 $html .= '<td>';
-// $params = $pdf->serializeTCPDFtagParameters(array('Test', 'QRCODE,L', '', '', 50, 35, $style, 'N'));
-// $html .= '<tcpdf method="write2DBarcode" params="' . $params . '" />';
+$params = $pdf->serializeTCPDFtagParameters(array('Test', 'QRCODE,L', '', '', 50, 35, $style, 'N'));
+$html .= '<tcpdf method="write2DBarcode" params="' . $params . '" />';
 $html .= '</td>';
 $html .= '</tr>';
 
@@ -103,11 +103,67 @@ $html .= '</thead>';
 #tbody
 $html .= '<tbody>';
 $html .= '<tr>';
-$html .= '<th>First Name :</th>';
+$html .= '<th><b>First Name :</b></th>';
 $html .= '<td>Enayat</td>';
-$html .= '<th>Last Name :</th>';
+$html .= '<th><b>Last Name :</b></th>';
 $html .= '<td>Ali</td>';
 $html .= '</tr>';
+$html .= '<tr>';
+$html .= '<th><b>Gender :</b></th>';
+$html .= '<td>Male</td>';
+$html .= '<th><b>Curse Name :</b></th>';
+$html .= '<td>B-Tech</td>';
+$html .= '</tr>';
+$html .= '<tr>';
+$html .= '<th><b>Mobile No :</b></th>';
+$html .= '<td>896078890</td>';
+$html .= '<th><b>Email Address :</b></th>';
+$html .= '<td>ali890@gmail.com</td>';
+$html .= '</tr>';
+$html .= '<tr>';
+$html .= '<th><b>Center Name :</b></th>';
+$html .= '<td>AMU</td>';
+$html .= '<th><b>Valid For :</b></th>';
+$html .= '<td>Field of Study as Under</td>';
+$html .= '</tr>';
+$html .= '<tr>';
+$html .= '<th><b>Exam Date :</b></th>';
+$html .= '<td>2024-02-29</td>';
+$html .= '<th><b>Exam Time :</b></th>';
+$html .= '<td>11 AM to 02 PM</td>';
+$html .= '</tr>';
+$html .= '<tr>';
+$html .= '<th>';
+$html .= '<span style="text-decoration: underline;color: green;">Allocated Exam Center:-</span><br>';
+$html .= '</th>';
+$html .= '<td>';
+$html .= '<img src="../../students/4/avatar.png" height="200" width="200" alt="Logo" />';
+$html .= '</td>';
+$html .= '<td style="vertical-align: middle; text-align:center;">Student Signature</td>';
+$html .= '<td>';
+$html .= '<img src="../logos/exam_controller_logo.jpg" height="200" width="200" alt="Logo" />';
+$html .= '</td>';
+$html .= '</tr>';
+$html .= '<tr>';
+$html .= '<th colspan="4">';
+$html .= '<p>Candidate having valid Admit Card of the allotted Examination Centre only is permitted to undertake the examination. Note : Please bring alongwith you the following...</p>';
+$html .= '<span>1. A recent passport size photograph for Exam.</span><br>';
+$html .= '<span>2. Origional Photo ID Proof (Aadhar Card, Driving License, Voter ID Card, Passport, Institution ID Card or Pan Card).</span>';
+$html .= '</th>';
+$html .= '</tr>';
+$html .= '<tr style="font-size: 18px; background-color: #f2dede; text-align: center; font-weight: bold;">';
+$html .= '<th colspan="4">INSTRUCTIONS TO THE CANDIDATE</th>';
+$html .= '</tr>';
+$html .= '<tr>
+            <td colspan="4">
+                <ol type="1">
+                    <li>Please report 15 minutes in advance before the commencement of the examination at the alloted Examination Centre.</li>
+                    <li>Candidates will not be permitted to enter the examination centre after 30 minutes of the commencement of the examination and will not be permitted to leave the Examination Hall before the end of the examination.</li>
+                    <li>Online Calculator is Available For Calculations.</li>
+                    <li>Communication devices like Cellphones are not allowed inside the examination hall.</li>
+                </ol>
+            </td>
+        </tr>';
 $html .= '</tbody>';
 $html .= '</table>';
 

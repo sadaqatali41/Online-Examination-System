@@ -65,6 +65,21 @@ if(filter_has_var(INPUT_GET, 'id') && filter_input(INPUT_GET, 'id', FILTER_VALID
     echo '<h2>Not Found.</h2>';exit;
 }
 
+#student information
+$stmt = $conn->prepare("SELECT st.fname, st.lname, st.gender, st.phone, st.email, st.avatar, CONCAT(st.id, st.pin) AS reg_no, ct.center_name, ct.center_code, ct.center_address, co.course_name, es.exam_date, es.start_time, es.end_time FROM students st INNER JOIN centers ct ON ct.id=st.center_id INNER JOIN courses co ON co.id=st.course_id LEFT JOIN exam_schedule es ON es.course_id=st.course_id AND es.for_year=YEAR(CURRENT_DATE) WHERE st.id=?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$res = $stmt->get_result();
+$stmt->close();
+$row = $res->fetch_assoc();
+
+#logo setting
+$stlg = $conn->prepare("SELECT ls.university_logo, ls.exam_controller_logo FROM logo_settings ls WHERE 1=1");
+$stlg->execute();
+$reslg = $stlg->get_result();
+$stlg->close();
+$rowlg = $reslg->fetch_assoc();
+
 $html .= '<table border="1" cellpadding="5">';
 $html .= '<thead>';
 $html .= '<tr style="background-color: #d9edf7;">';
@@ -84,64 +99,67 @@ $style = array(
     'module_height' => 1    #height of a single module in points
 );
 
+$qrData = 'Test';
+
 $html .= '<tr>';
 $html .= '<td colspan="3">';
-$html .= '<img src="../logos/university_logo.jpg" alt="Logo" />';
+$html .= '<img src="../logos/'. $rowlg['university_logo'] .'" alt="Logo" />';
 $html .= '</td>';
 $html .= '<td>';
-$params = $pdf->serializeTCPDFtagParameters(array('Test', 'QRCODE,L', '', '', 50, 35, $style, 'N'));
-$html .= '<tcpdf method="write2DBarcode" params="' . $params . '" />';
+// $params = $pdf->serializeTCPDFtagParameters(array($qrData, 'QRCODE,L', '', '', 50, 35, $style, 'N'));
+// $html .= '<tcpdf method="write2DBarcode" params="' . $params . '" />';
 $html .= '</td>';
 $html .= '</tr>';
 
 $html .= '<tr style="font-size: 18px; background-color: #dff0d8; font-weight: bold;">';
-$html .= '<th style="text-align: center;">Center Code: 1234</th>';
+$html .= '<th style="text-align: center;">Center Code: '. $row['center_code'] .'</th>';
 $html .= '<th colspan="2" style="text-align: center;">Student Admit Card</th>';
-$html .= '<th><span style="font-style: italic;">R.No.</span> 125670</th>';
+$html .= '<th><span style="font-style: italic;">R.No.</span> '. $row['reg_no'] .'</th>';
 $html .= '</tr>';
 $html .= '</thead>';
 #tbody
 $html .= '<tbody>';
 $html .= '<tr>';
 $html .= '<th><b>First Name :</b></th>';
-$html .= '<td>Enayat</td>';
+$html .= '<td>'. $row['fname'] .'</td>';
 $html .= '<th><b>Last Name :</b></th>';
-$html .= '<td>Ali</td>';
+$html .= '<td>'. $row['lname'] .'</td>';
 $html .= '</tr>';
 $html .= '<tr>';
 $html .= '<th><b>Gender :</b></th>';
-$html .= '<td>Male</td>';
+$html .= '<td>'. ($row['gender'] == 'M' ? 'Male' : 'Female') .'</td>';
 $html .= '<th><b>Curse Name :</b></th>';
-$html .= '<td>B-Tech</td>';
+$html .= '<td>'. $row['course_name'] .'</td>';
 $html .= '</tr>';
 $html .= '<tr>';
 $html .= '<th><b>Mobile No :</b></th>';
-$html .= '<td>896078890</td>';
+$html .= '<td>'. $row['phone'] .'</td>';
 $html .= '<th><b>Email Address :</b></th>';
-$html .= '<td>ali890@gmail.com</td>';
+$html .= '<td>'. $row['email'] .'</td>';
 $html .= '</tr>';
 $html .= '<tr>';
 $html .= '<th><b>Center Name :</b></th>';
-$html .= '<td>AMU</td>';
+$html .= '<td>'. $row['center_name'] .'</td>';
 $html .= '<th><b>Valid For :</b></th>';
 $html .= '<td>Field of Study as Under</td>';
 $html .= '</tr>';
 $html .= '<tr>';
 $html .= '<th><b>Exam Date :</b></th>';
-$html .= '<td>2024-02-29</td>';
+$html .= '<td>'. $row['exam_date'] .'</td>';
 $html .= '<th><b>Exam Time :</b></th>';
-$html .= '<td>11 AM to 02 PM</td>';
+$html .= '<td>'. $row['start_time'] .' To '. $row['end_time'] .'</td>';
 $html .= '</tr>';
 $html .= '<tr>';
 $html .= '<th>';
 $html .= '<span style="text-decoration: underline;color: green;">Allocated Exam Center:-</span><br>';
+$html .= $row['center_address'];
 $html .= '</th>';
 $html .= '<td>';
-$html .= '<img src="../../students/4/avatar.png" height="200" width="200" alt="Logo" />';
+$html .= '<img src="../../students/'. $id .'/'. $row['avatar'] .'" height="200" width="200" alt="Logo" />';
 $html .= '</td>';
 $html .= '<td style="vertical-align: middle; text-align:center;">Student Signature</td>';
 $html .= '<td>';
-$html .= '<img src="../logos/exam_controller_logo.jpg" height="200" width="200" alt="Logo" />';
+$html .= '<img src="../logos/'. $rowlg['exam_controller_logo'] .'" height="200" width="200" alt="Logo" />';
 $html .= '</td>';
 $html .= '</tr>';
 $html .= '<tr>';

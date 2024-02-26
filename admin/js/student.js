@@ -358,4 +358,16 @@ $(function(){
         return false;
     });
 
+    $(document).on('click', '.admitCard', function(){
+        let id = $(this).data('id');
+        $('#studentModalTitle').html('Student Admit Card');
+
+        $('#pdfIframe').attr('src', 'pdf/admit_card.php?id=' + id);
+        $('#studentPdfModal').modal('show');
+    });
+
+    $('#studentPdfModal').on('hidden.bs.modal', function(){
+        $('#pdfIframe').attr('src', '');
+    });
+
 });

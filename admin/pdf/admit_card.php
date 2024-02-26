@@ -22,6 +22,9 @@ require_once('../class/TCPDF/tcpdf.php');
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
+// set the indentation width for bullet lists
+$pdf->setListIndentWidth(4);
+
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor(PDF_AUTHOR);
@@ -66,7 +69,7 @@ if(filter_has_var(INPUT_GET, 'id') && filter_input(INPUT_GET, 'id', FILTER_VALID
 }
 
 #student information
-$stmt = $conn->prepare("SELECT st.fname, st.lname, st.gender, st.phone, st.email, st.avatar, CONCAT(st.id, st.pin) AS reg_no, ct.center_name, ct.center_code, ct.center_address, co.course_name, es.exam_date, es.start_time, es.end_time FROM students st INNER JOIN centers ct ON ct.id=st.center_id INNER JOIN courses co ON co.id=st.course_id LEFT JOIN exam_schedule es ON es.course_id=st.course_id AND es.for_year=YEAR(CURRENT_DATE) WHERE st.id=?");
+$stmt = $conn->prepare("SELECT st.fname, st.lname, st.gender, st.phone, st.email, st.avatar, CONCAT(st.id, st.pin) AS reg_no, ct.center_name, ct.center_code, ct.center_address, st.dob, co.course_name, es.exam_date, es.start_time, es.end_time FROM students st INNER JOIN centers ct ON ct.id=st.center_id INNER JOIN courses co ON co.id=st.course_id LEFT JOIN exam_schedule es ON es.course_id=st.course_id AND es.for_year=YEAR(CURRENT_DATE) WHERE st.id=?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $res = $stmt->get_result();
@@ -99,15 +102,23 @@ $style = array(
     'module_height' => 1    #height of a single module in points
 );
 
-$qrData = 'Test';
+$qrData = 'R.No. : ' . $row['reg_no'] . "\n";
+$qrData .= 'Name : ' . $row['fname'] . ' ' . $row['lname'] . "\n";
+$qrData .= 'DOB : ' . $row['dob'] . "\n";
+$qrData .= 'Mobile No : ' . $row['phone'] . "\n";
+$qrData .= 'Email : ' . $row['email'] . "\n";
+$qrData .= 'Course Name: ' . $row['course_name'] . "\n";
+$qrData .= 'Center Name : ' . $row['center_name'] . "\n";
+$qrData .= 'Exam Date : ' . $row['exam_date'] . "\n";
+$qrData .= 'Exam Time : ' . date('H:i', strtotime($row['start_time'])) . ' To ' . date('H:i', strtotime($row['end_time']));
 
 $html .= '<tr>';
 $html .= '<td colspan="3">';
 $html .= '<img src="../logos/'. $rowlg['university_logo'] .'" alt="Logo" />';
 $html .= '</td>';
 $html .= '<td>';
-// $params = $pdf->serializeTCPDFtagParameters(array($qrData, 'QRCODE,L', '', '', 50, 35, $style, 'N'));
-// $html .= '<tcpdf method="write2DBarcode" params="' . $params . '" />';
+$params = $pdf->serializeTCPDFtagParameters(array($qrData, 'QRCODE,L', '', '', 50, 35, $style, 'N'));
+$html .= '<tcpdf method="write2DBarcode" params="' . $params . '" />';
 $html .= '</td>';
 $html .= '</tr>';
 
@@ -120,40 +131,39 @@ $html .= '</thead>';
 #tbody
 $html .= '<tbody>';
 $html .= '<tr>';
-$html .= '<th><b>First Name :</b></th>';
+$html .= '<td><b>First Name :</b></td>';
 $html .= '<td>'. $row['fname'] .'</td>';
-$html .= '<th><b>Last Name :</b></th>';
+$html .= '<td><b>Last Name :</b></td>';
 $html .= '<td>'. $row['lname'] .'</td>';
 $html .= '</tr>';
 $html .= '<tr>';
-$html .= '<th><b>Gender :</b></th>';
+$html .= '<td><b>Gender :</b></td>';
 $html .= '<td>'. ($row['gender'] == 'M' ? 'Male' : 'Female') .'</td>';
-$html .= '<th><b>Curse Name :</b></th>';
+$html .= '<td><b>Curse Name :</b></td>';
 $html .= '<td>'. $row['course_name'] .'</td>';
 $html .= '</tr>';
 $html .= '<tr>';
-$html .= '<th><b>Mobile No :</b></th>';
+$html .= '<td><b>Mobile No :</b></td>';
 $html .= '<td>'. $row['phone'] .'</td>';
-$html .= '<th><b>Email Address :</b></th>';
-$html .= '<td>'. $row['email'] .'</td>';
+$html .= '<td><b>Center Name :</b></td>';
+$html .= '<td>'. $row['center_name'] .'</td>';
 $html .= '</tr>';
 $html .= '<tr>';
-$html .= '<th><b>Center Name :</b></th>';
-$html .= '<td>'. $row['center_name'] .'</td>';
-$html .= '<th><b>Valid For :</b></th>';
+$html .= '<th><b>Email Address :</b></th>';
+$html .= '<td colspan="2">'. $row['email'] .'</td>';
 $html .= '<td>Field of Study as Under</td>';
 $html .= '</tr>';
 $html .= '<tr>';
-$html .= '<th><b>Exam Date :</b></th>';
+$html .= '<td><b>Exam Date :</b></td>';
 $html .= '<td>'. $row['exam_date'] .'</td>';
-$html .= '<th><b>Exam Time :</b></th>';
+$html .= '<td><b>Exam Time :</b></td>';
 $html .= '<td>'. $row['start_time'] .' To '. $row['end_time'] .'</td>';
 $html .= '</tr>';
 $html .= '<tr>';
-$html .= '<th>';
+$html .= '<td>';
 $html .= '<span style="text-decoration: underline;color: green;">Allocated Exam Center:-</span><br>';
 $html .= $row['center_address'];
-$html .= '</th>';
+$html .= '</td>';
 $html .= '<td>';
 $html .= '<img src="../../students/'. $id .'/'. $row['avatar'] .'" height="200" width="200" alt="Logo" />';
 $html .= '</td>';
@@ -165,8 +175,10 @@ $html .= '</tr>';
 $html .= '<tr>';
 $html .= '<th colspan="4">';
 $html .= '<p>Candidate having valid Admit Card of the allotted Examination Centre only is permitted to undertake the examination. Note : Please bring alongwith you the following...</p>';
-$html .= '<span>1. A recent passport size photograph for Exam.</span><br>';
-$html .= '<span>2. Origional Photo ID Proof (Aadhar Card, Driving License, Voter ID Card, Passport, Institution ID Card or Pan Card).</span>';
+$html .= '<ol type="1">';
+$html .= '<li>A recent passport size photograph for Exam.</li>';
+$html .= '<li>Origional Photo ID Proof (Aadhar Card, Driving License, Voter ID Card, Passport, Institution ID Card or Pan Card).</li>';
+$html .= '</ol>';
 $html .= '</th>';
 $html .= '</tr>';
 $html .= '<tr style="font-size: 18px; background-color: #f2dede; text-align: center; font-weight: bold;">';
@@ -190,4 +202,5 @@ $pdf->writeHTML($html, true, 0, true, 0);
 $pdf->lastPage();
 $pdf->SetDisplayMode('real', 'default');
 //Close and output PDF document
-$pdf->Output('example_050.pdf', 'I');
+$pdfFileName = 'admitCard' . $row['fname'] . '' . $row['lname'] . '-' . date('Y-m-d-H-i-s');
+$pdf->Output($pdfFileName . '.pdf', 'I');

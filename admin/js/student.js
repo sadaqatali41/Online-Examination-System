@@ -366,6 +366,14 @@ $(function(){
         $('#studentPdfModal').modal('show');
     });
 
+    $(document).on('click', '.studentDetail', function(){
+        let id = $(this).data('id');
+        $('#studentModalTitle').html('Student Details');
+
+        $('#pdfIframe').attr('src', 'pdf/student.php?id=' + id);
+        $('#studentPdfModal').modal('show');
+    });
+
     $('#studentPdfModal').on('hidden.bs.modal', function(){
         $('#pdfIframe').attr('src', '');
     });

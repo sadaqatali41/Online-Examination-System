@@ -139,7 +139,7 @@ $html .= '</tr>';
 $html .= '<tr>';
 $html .= '<td><b>Gender :</b></td>';
 $html .= '<td>'. ($row['gender'] == 'M' ? 'Male' : 'Female') .'</td>';
-$html .= '<td><b>Curse Name :</b></td>';
+$html .= '<td><b>Course Name :</b></td>';
 $html .= '<td>'. $row['course_name'] .'</td>';
 $html .= '</tr>';
 $html .= '<tr>';

@@ -28,7 +28,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 				$filesize = $_FILES["uni_logo"]["size"];
 				$errorCode = $_FILES["uni_logo"]["error"];
                 $maxsize = 3 * 1024 * 1024; #3MB
-                $ext = trim(strtolower(pathinfo($filename, PATHINFO_EXTENSION)));
+                $uniLogoExt = trim(strtolower(pathinfo($filename, PATHINFO_EXTENSION)));
                 $maxWidth = 670;
                 $maxHeight = 145;
 
@@ -44,7 +44,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 if ($filesize > $maxsize) {
                     $error[] = "University Logo : File size is larger than the 3MB.";
                 }
-				if (!array_key_exists($ext, $allowedTypes)) {
+				if (!array_key_exists($uniLogoExt, $allowedTypes)) {
 					$error[] = "University Logo : Please select a valid file format.";
 				}
                 list($img_width, $img_height, $img_type, $img_attr) = getimagesize($fileTempName);
@@ -60,7 +60,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 				$filesize = $_FILES["exam_controller"]["size"];
 				$errorCode = $_FILES["exam_controller"]["error"];
                 $maxsize = 3 * 1024 * 1024; #3MB
-                $ext = trim(strtolower(pathinfo($filename, PATHINFO_EXTENSION)));
+                $examContExt = trim(strtolower(pathinfo($filename, PATHINFO_EXTENSION)));
                 $maxWidth = 300;
                 $maxHeight = 300;
 
@@ -76,12 +76,44 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                 if ($filesize > $maxsize) {
                     $error[] = "Exam Controller Logo : File size is larger than the 3MB.";
                 }
-				if (!array_key_exists($ext, $allowedTypes)) {
+				if (!array_key_exists($examContExt, $allowedTypes)) {
 					$error[] = "Exam Controller Logo : Please select a valid file format.";
 				}
                 list($img_width, $img_height, $img_type, $img_attr) = getimagesize($fileTempName);
                 if ($img_width > $maxWidth || $img_height > $maxHeight) {
                     $error[] = "Exam Controller Logo : Image should have maximum width of {$maxWidth}px and height of {$maxHeight}px.";
+                }
+            }
+            #result logo
+            if(is_uploaded_file($_FILES['result_logo']['tmp_name'])) {
+                $filename = $_FILES["result_logo"]["name"];
+				$fileTempName = $_FILES["result_logo"]["tmp_name"];
+				$filetype = $_FILES["result_logo"]["type"];
+				$filesize = $_FILES["result_logo"]["size"];
+				$errorCode = $_FILES["result_logo"]["error"];
+                $maxsize = 3 * 1024 * 1024; #3MB
+                $resLogoExt = trim(strtolower(pathinfo($filename, PATHINFO_EXTENSION)));
+                $maxWidth = 580;
+                $maxHeight = 130;
+
+                $allowedTypes = array(
+					"JPG" => "image/JPG",
+					"jpg" => "image/jpg",
+					"jpeg" => "image/jpeg",					
+					"png" => "image/png"
+				);
+                if (!in_array($filetype, $allowedTypes)) {
+                    $error[] = "Result Logo : Invalid File type.";
+                }
+                if ($filesize > $maxsize) {
+                    $error[] = "Result Logo : File size is larger than the 3MB.";
+                }
+				if (!array_key_exists($resLogoExt, $allowedTypes)) {
+					$error[] = "Result Logo : Please select a valid file format.";
+				}
+                list($img_width, $img_height, $img_type, $img_attr) = getimagesize($fileTempName);
+                if ($img_width > $maxWidth || $img_height > $maxHeight) {
+                    $error[] = "Result Logo : Image should have maximum width of {$maxWidth}px and height of {$maxHeight}px.";
                 }
             }
 
@@ -96,7 +128,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                         if(!is_dir($targetPath)) {
                             mkdir($targetPath, 0777, true);
                         }
-                        $avatarName = 'university_logo.' . $ext;
+                        $avatarName = 'university_logo.' . $uniLogoExt;
                         $fileTempName = $_FILES["uni_logo"]["tmp_name"];
                         if (!move_uploaded_file($fileTempName, $targetPath . '/' . $avatarName)) {
 							throw new Exception("Can't upload avatar. Reason : " . $errorCode);
@@ -116,7 +148,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                         if(!is_dir($targetPath)) {
                             mkdir($targetPath, 0777, true);
                         }
-                        $avatarName = 'exam_controller_logo.' . $ext;
+                        $avatarName = 'exam_controller_logo.' . $examContExt;
                         $fileTempName = $_FILES["exam_controller"]["tmp_name"];
                         if (!move_uploaded_file($fileTempName, $targetPath . '/' . $avatarName)) {
 							throw new Exception("Can't upload avatar. Reason : " . $errorCode);
@@ -127,6 +159,26 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 
                         if($st1->execute() === false) {
                             throw new Exception("Can't update Exam Controller Logo. Reason : " . $st1->error);
+                        }
+                        $st1->close();
+                    }
+                    #result logo
+                    if(is_uploaded_file($_FILES['result_logo']['tmp_name'])) {
+                        $targetPath = "../logos";
+                        if(!is_dir($targetPath)) {
+                            mkdir($targetPath, 0777, true);
+                        }
+                        $avatarName = 'result_logo.' . $resLogoExt;
+                        $fileTempName = $_FILES["result_logo"]["tmp_name"];
+                        if (!move_uploaded_file($fileTempName, $targetPath . '/' . $avatarName)) {
+							throw new Exception("Can't upload avatar. Reason : " . $errorCode);
+						}
+                        #update logo
+                        $st1 = $conn->prepare("UPDATE logo_settings SET result_logo=?, updated_by=? WHERE id=?");
+                        $st1->bind_param("sii", $avatarName, $user_data['id'], $ls_id);
+
+                        if($st1->execute() === false) {
+                            throw new Exception("Can't update Result Logo. Reason : " . $st1->error);
                         }
                         $st1->close();
                     }

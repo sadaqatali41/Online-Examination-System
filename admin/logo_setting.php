@@ -83,6 +83,24 @@ $rowp = $resp->fetch_assoc();
                                             </div>                                            
                                         </div>
                                         <?php endif; ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="result_logo">Result Logo</label>
+                                                    <input type="file" name="result_logo" id="result_logo" accept=".jpg, .jpeg, .png">
+                                                    <p class="help-block">580X130 pixel with 3MB</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php if($rowp['result_logo'] !== null) : ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <img src="logos/<?= $rowp['result_logo']; ?>" style="height: 13rem;" alt="Result Logo" srcset="">
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>                                
                             </div>

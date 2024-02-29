@@ -39,6 +39,11 @@ $(function(){
                     placement: 'top',
                     title: 'Student Detail'
                 });
+                $('.studentResult').tooltip({
+                    container: 'body',
+                    placement: 'top',
+                    title: 'Student Result'
+                });
             },
             "columns": [{
                 "data": "id"
@@ -89,10 +94,13 @@ $(function(){
                 "data": null,
                 "render": function(data, type, row, cell) {
                     let manage = ''; 
-                    manage += '<div class="btn-group" style="display: flex;">';
+                    manage += '<div class="btn-group" style="display: inline-flex;">';
                     manage += '<a href="student.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
                     manage += '<button type="button" class="btn btn-xs bg-maroon admitCard" data-id="' + row.id + '"><i class="fa fa-file-pdf-o"></i></button>';
                     manage += '<button type="button" class="btn btn-xs bg-purple studentDetail" data-id="' + row.id + '"><i class="fa fa-file-pdf-o"></i></button>';
+                    if(row.result_id !== null) {
+                        manage += '<button type="button" class="btn btn-xs bg-yellow studentResult" data-id="' + row.id + '"><i class="fa fa-file-pdf-o"></i></button>';
+                    }
                     manage += '</div>';
     
                     return manage;
@@ -371,6 +379,14 @@ $(function(){
         $('#studentModalTitle').html('Student Details');
 
         $('#pdfIframe').attr('src', 'pdf/student.php?id=' + id);
+        $('#studentPdfModal').modal('show');
+    });
+
+    $(document).on('click', '.studentResult', function(){
+        let id = $(this).data('id');
+        $('#studentModalTitle').html('Student Result');
+
+        $('#pdfIframe').attr('src', 'pdf/student_result.php?id=' + id);
         $('#studentPdfModal').modal('show');
     });
 

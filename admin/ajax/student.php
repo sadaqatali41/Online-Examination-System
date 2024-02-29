@@ -2,10 +2,12 @@
 include '../class/config.php';
 include '../class/database.php';
 include '../class/userAuth.php';
+include '../class/helper.php';
 $config = new Config();
 $db = new Database();
 $conn = $db->connectDB();
 $auth = new UserAuth();
+$helper = new Helper();
 $auth->sessionStart();
 if ($auth->loginCheck($conn) === false) {
     header("Location: ../login.php");
@@ -45,7 +47,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             }
 
             ## Total number of records without filtering
-            $stmt = $conn->prepare("SELECT COUNT(st.id) AS allcount FROM students st LEFT JOIN courses cs ON cs.id=st.course_id LEFT JOIN centers ce ON ce.id=st.center_id LEFT JOIN cities c ON c.id=st.city LEFT JOIN states s ON s.id=st.state LEFT JOIN countries ct ON ct.id=st.country WHERE 1=1" . $searchQuery);
+            $stmt = $conn->prepare("SELECT COUNT(st.id) AS allcount FROM students st LEFT JOIN courses cs ON cs.id=st.course_id LEFT JOIN centers ce ON ce.id=st.center_id LEFT JOIN cities c ON c.id=st.city LEFT JOIN states s ON s.id=st.state LEFT JOIN countries ct ON ct.id=st.country LEFT JOIN results rs ON rs.student_id=st.id WHERE 1=1" . $searchQuery);
             $stmt->execute();
             $res = $stmt->get_result();
             $records = $res->fetch_assoc();
@@ -55,7 +57,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $totalRecordwithFilter = $totalRecords;
 
             ## Pagination query
-            $stmt2 = $conn->prepare("SELECT st.id, CONCAT(st.fname, ' ', st.lname) AS full_name, st.email, st.password, st.phone, st.gender, st.course_id, cs.course_name, st.center_id, ce.center_name, st.city, st.pin, st.state, st.country, CONCAT(c.name, ',', s.name, ',', ct.name, ',', st.pin) AS p_address, st.address, st.avatar, st.status FROM students st LEFT JOIN courses cs ON cs.id=st.course_id LEFT JOIN centers ce ON ce.id=st.center_id LEFT JOIN cities c ON c.id=st.city LEFT JOIN states s ON s.id=st.state LEFT JOIN countries ct ON ct.id=st.country WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
+            $stmt2 = $conn->prepare("SELECT st.id, CONCAT(st.fname, ' ', st.lname) AS full_name, st.email, st.password, st.phone, st.gender, st.course_id, cs.course_name, st.center_id, ce.center_name, st.city, st.pin, st.state, st.country, CONCAT(c.name, ',', s.name, ',', ct.name, ',', st.pin) AS p_address, st.address, st.avatar, st.status, rs.id AS result_id FROM students st LEFT JOIN courses cs ON cs.id=st.course_id LEFT JOIN centers ce ON ce.id=st.center_id LEFT JOIN cities c ON c.id=st.city LEFT JOIN states s ON s.id=st.state LEFT JOIN countries ct ON ct.id=st.country LEFT JOIN results rs ON rs.student_id=st.id WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
             $stmt2->execute();
             $res2 = $stmt2->get_result();
             $row1 = array();
@@ -63,11 +65,11 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 
                 while ($row = $res2->fetch_assoc()) {
 
-                    $row1[] = array(
+                    $row1[] = [
                         "id" => $row['id'],
                         "full_name" => $row['full_name'],
                         "email" => $row['email'],
-                        "password" => $row['password'],
+                        "password" => $helper->passwordReplace($row['password']),
                         "phone" => $row['phone'],
                         "gender" => $row['gender'],
                         "course_name" => $row['course_name'],
@@ -76,7 +78,8 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                         "address" => $row['address'],
                         "avatar" => $row['avatar'],
                         "status" => $row['status'],
-                    );
+                        "result_id" => $row['result_id'],
+                    ];
                 }
             }
 

@@ -151,6 +151,7 @@ $user_data = $_SESSION['user_data'];
                                                         <div class="form-group">
                                                             <label for="password">Password</label>
                                                             <input type="password" name="password" id="password" class="form-control" placeholder="atleast 8 chars" autocomplete="off">
+                                                            <i class="toggle-password fa fa-fw fa-eye-slash"></i>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
@@ -375,6 +376,7 @@ $user_data = $_SESSION['user_data'];
                                                                 <div class="form-group">
                                                                     <label for="password">Password</label>
                                                                     <input type="password" name="password" id="password" value="<?= $row['password']; ?>" class="form-control" placeholder="atleast 8 chars" autocomplete="off">
+                                                                    <i class="toggle-password fa fa-fw fa-eye-slash"></i>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-2">

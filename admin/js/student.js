@@ -294,6 +294,18 @@ $(function(){
         todayHighlight: true
     });
 
+    $(document).on('click', '.toggle-password', function(){
+        let element = $(this);
+        element.toggleClass("fa-eye fa-eye-slash");
+        let passwordElement = element.prev('input');
+        let inputType = passwordElement.attr('type');
+        if (inputType == "password") {
+            passwordElement.attr("type", "text");
+        } else {
+            passwordElement.attr("type", "password");
+        }
+    });
+
     $(document).on('submit', '#studentAddForm', function(){
         var formData = new FormData(this);
         formData.append('act', 'studentAddSubmit');

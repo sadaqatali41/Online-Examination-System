@@ -69,6 +69,7 @@ $user_data = $_SESSION['user_data'];
                                             <th>Option C</th>
                                             <th>Option D</th>
                                             <th>Correct Option</th>
+                                            <th>Marks</th>
                                             <th>Status</th>
                                             <th>Manage</th>
                                         </tr>
@@ -163,7 +164,13 @@ $user_data = $_SESSION['user_data'];
                                                                 <option value="optionD">Option D</option>
                                                             </select>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="marks">Marks</label>
+                                                            <input type="text" name="marks" id="marks" class="form-control" value="1" autocomplete="off">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -279,13 +286,21 @@ $user_data = $_SESSION['user_data'];
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
+                                                            <label for="marks">Marks</label>
+                                                            <input type="text" name="marks" id="marks" class="form-control" value="<?= $row['marks']; ?>" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
                                                             <label for="question_status">Question Status</label>
                                                             <select name="question_status" class="form-control">
                                                                 <option value="A" <?php if($row['question_status']=='A'){echo 'selected';} ?>>Active</option>
                                                                 <option value="I" <?php if($row['question_status']=='I'){echo 'selected';} ?>>Inactive</option>
                                                             </select>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

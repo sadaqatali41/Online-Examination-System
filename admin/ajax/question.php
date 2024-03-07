@@ -68,6 +68,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                         "optionC" => $row['optionC'],
                         "optionD" => $row['optionD'],
                         "correct_option" => $row['correct_option'],
+                        "marks" => $row['marks'],
                         "question_status" => $row['question_status'],
                     );
                 }
@@ -133,6 +134,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $optionC = trim(filter_input(INPUT_POST, 'optionC', FILTER_SANITIZE_STRING));
             $optionD = trim(filter_input(INPUT_POST, 'optionD', FILTER_SANITIZE_STRING));
             $correct_option = trim(filter_input(INPUT_POST, 'correct_option', FILTER_SANITIZE_STRING));
+            $marks = filter_input(INPUT_POST, 'marks', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
             if(empty($course_id)) {
                 $error[] = 'Course Name is required.';
@@ -155,14 +157,20 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             if(empty($correct_option)) {
                 $error[] = 'Correct Option is required.';
             }
+            if(empty($marks)) {
+                $error[] = 'Marks is required.';
+            }
+            if($marks > 5) {
+                $error[] = 'Marks should between 1 and 5.';
+            }
 
             if(empty($error)) {
 
                 try {
                     $conn->autocommit(false);
 
-                    $stmt = $conn->prepare("INSERT INTO questions(course_id, question_name, optionA, optionB, optionC, optionD, correct_option, created_by) VALUES (?,?,?,?,?,?,?,?)");
-                    $stmt->bind_param("issssssi", $course_id, $question_name, $optionA, $optionB, $optionC, $optionD, $correct_option, $user_data['id']);
+                    $stmt = $conn->prepare("INSERT INTO questions(course_id, question_name, optionA, optionB, optionC, optionD, correct_option, marks, created_by) VALUES (?,?,?,?,?,?,?,?,?)");
+                    $stmt->bind_param("issssssdi", $course_id, $question_name, $optionA, $optionB, $optionC, $optionD, $correct_option, $marks, $user_data['id']);
 
                     if($stmt->execute() === false) {
                         throw new Exception("Can't insert in questions. Reason : " . $stmt->error);
@@ -197,6 +205,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $optionD = trim(filter_input(INPUT_POST, 'optionD', FILTER_SANITIZE_STRING));
             $correct_option = trim(filter_input(INPUT_POST, 'correct_option', FILTER_SANITIZE_STRING));
             $question_status = trim(filter_input(INPUT_POST, 'question_status', FILTER_SANITIZE_STRING));
+            $marks = filter_input(INPUT_POST, 'marks', FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
             if(empty($course_id)) {
                 $error[] = 'Course Name is required.';
@@ -222,14 +231,20 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             if(empty($question_status)) {
                 $error[] = 'Question Status is required.';
             }
+            if(empty($marks)) {
+                $error[] = 'Marks is required.';
+            }
+            if($marks > 5) {
+                $error[] = 'Marks should between 1 and 5.';
+            }
 
             if(empty($error)) {
 
                 try {
                     $conn->autocommit(false);
 
-                    $stmt = $conn->prepare("UPDATE questions SET course_id=?, question_name=?, optionA=?, optionB=?, optionC=?, optionD=?, correct_option=?, updated_by=?, question_status=? WHERE id=?");
-                    $stmt->bind_param("issssssisi", $course_id, $question_name, $optionA, $optionB, $optionC, $optionD, $correct_option, $user_data['id'], $question_status, $question_id);
+                    $stmt = $conn->prepare("UPDATE questions SET course_id=?, question_name=?, optionA=?, optionB=?, optionC=?, optionD=?, correct_option=?, updated_by=?, question_status=?, marks=? WHERE id=?");
+                    $stmt->bind_param("issssssisdi", $course_id, $question_name, $optionA, $optionB, $optionC, $optionD, $correct_option, $user_data['id'], $question_status, $marks, $question_id);
                     
                     if($stmt->execute() === false) {
                         throw new Exception("Can't update question. Reason : " . $stmt->error);

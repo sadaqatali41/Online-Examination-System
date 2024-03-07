@@ -45,6 +45,8 @@ $(function(){
             }, {
                 "data": "correct_option"
             }, {
+                "data": "marks"
+            }, {
                 "data": "question_status",
                 "render": function(data, type, row, cell) {
                     if(data == 'A') {

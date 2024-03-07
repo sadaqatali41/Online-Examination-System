@@ -68,6 +68,7 @@ $user_data = $_SESSION['user_data'];
                                             <th>Exam Date</th>
                                             <th>Start Time</th>
                                             <th>End Time</th>
+                                            <th>Duration(HRS)</th>
                                             <th>Status</th>
                                             <th>Manage</th>
                                         </tr>

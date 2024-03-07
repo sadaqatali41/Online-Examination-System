@@ -43,6 +43,8 @@ $(function(){
             },  {
                 "data": "end_time"
             },  {
+                "data": "duration"
+            },  {
                 "data": "es_status",
                 "render": function(data, type, row, cell) {
                     if(data == 'A') {

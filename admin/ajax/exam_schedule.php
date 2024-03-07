@@ -51,7 +51,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $totalRecordwithFilter = $totalRecords;
 
             ## Pagination query
-            $stmt2 = $conn->prepare("SELECT es.*, cc.course_name FROM exam_schedule es INNER JOIN courses cc ON cc.id=es.course_id WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
+            $stmt2 = $conn->prepare("SELECT es.*, cc.course_name, TIMEDIFF(es.end_time, es.start_time) AS duration FROM exam_schedule es INNER JOIN courses cc ON cc.id=es.course_id WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
             $stmt2->execute();
             $res2 = $stmt2->get_result();
             $row1 = array();
@@ -67,6 +67,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                         "exam_date" => (new DateTime($row['exam_date']))->format('d M Y'),
                         "start_time" => (new DateTime($row['start_time']))->format('h:i A'),
                         "end_time" => (new DateTime($row['end_time']))->format('h:i A'),
+                        "duration" => $row['duration'],
                         "es_status" => $row['es_status'],
                     );
                 }

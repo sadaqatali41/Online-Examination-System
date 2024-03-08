@@ -51,7 +51,12 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $totalRecordwithFilter = $totalRecords;
 
             ## Pagination query
-            $stmt2 = $conn->prepare("SELECT c.*, cc.cc_name FROM courses c INNER JOIN course_category cc ON cc.id=c.cc_id WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
+            $stmt2 = $conn->prepare("SELECT c.*, cc.cc_name,
+            (SELECT COUNT(q.course_id) FROM questions q WHERE q.course_id=c.id) AS tot_question,
+            (SELECT COUNT(s.course_id) FROM students s WHERE s.course_id=c.id) AS tot_student 
+            FROM courses c 
+            INNER JOIN course_category cc ON cc.id=c.cc_id 
+            WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
             $stmt2->execute();
             $res2 = $stmt2->get_result();
             $row1 = array();
@@ -65,6 +70,8 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                         "course_code" => $row['course_code'],
                         "cc_id" => $row['cc_name'],
                         "course_status" => $row['course_status'],
+                        "tot_question" => $row['tot_question'],
+                        "tot_student" => $row['tot_student'],
                     );
                 }
             }

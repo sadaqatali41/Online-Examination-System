@@ -51,6 +51,16 @@ $(function(){
                     }
                 }
             }, {
+                "data": "tot_question",
+                render: function(data) {
+                    return '<span class="badge bg-red">'+ data +'</span>';
+                }
+            }, {
+                "data": "tot_student",
+                render: function(data) {
+                    return '<span class="badge bg-blue">'+ data +'</span>';
+                }
+            }, {
                 "data": null,
                 "render": function(data, type, row, cell) {
                     let manage = ''; 

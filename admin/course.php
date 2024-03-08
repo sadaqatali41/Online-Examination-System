@@ -66,6 +66,8 @@ $user_data = $_SESSION['user_data'];
                                             <th>Course Name</th>
                                             <th>Course Code</th>
                                             <th>Status</th>
+                                            <th>Questions</th>
+                                            <th>Students</th>
                                             <th>Manage</th>
                                         </tr>
                                     </thead>

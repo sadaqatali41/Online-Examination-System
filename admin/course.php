@@ -75,6 +75,34 @@ $user_data = $_SESSION['user_data'];
                     </div>
                 </div>
             </section>
+            <!-- questions modal -->
+            <div class="modal fade" id="questionModal" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title" id="questionModalTitle">Course Name</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table id="questionTable" class="display table table-responsive table-striped table-bordered table-condensed" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Question Name</th>
+                                        <th>Option A</th>
+                                        <th>Option B</th>
+                                        <th>Option C</th>
+                                        <th>Option D</th>
+                                        <th>Correct Option</th>
+                                        <th>Marks</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
         <?php
             break;
         case 'add':

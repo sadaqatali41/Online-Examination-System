@@ -27,6 +27,11 @@ $(function(){
                     placement: 'top',
                     title: 'Edit'
                 });
+                $('.viewQuestion').tooltip({
+                    container: 'body',
+                    placement: 'top',
+                    title: 'Questions'
+                });
             },
             "columns": [{
                 "data": "id"
@@ -49,8 +54,9 @@ $(function(){
                 "data": null,
                 "render": function(data, type, row, cell) {
                     let manage = ''; 
-                    manage += '<div class="btn-group" style="display: flex;">';
+                    manage += '<div class="btn-group">';
                     manage += '<a href="course.php?act=edit&id=' + row['id'] + '" class="btn btn-primary btn-xs edit"><i class="fa fa-edit"></i></a>';
+                    manage += '<button type="button" class="btn btn-xs btn-info viewQuestion" data-id="'+ row.id +'" data-nm="'+ row.course_name +'"><i class="fa fa-question-circle"></i></button>';
                     manage += '</div>';
     
                     return manage;
@@ -74,6 +80,67 @@ $(function(){
 
         course_list(cc_id, course_status);
     });
+
+    $(document).on('click', '.viewQuestion', function(){
+        let el = $(this);
+        let course_id = el.data('id');
+        let course_name = el.data('nm');
+        let question_status = $('#course_status').val();
+        $('#questionModalTitle').html('Questions for : ' + course_name);
+        $.when(question_list(course_id, question_status)).then(function(){
+            $('#questionModal').modal('show');
+        });
+    });
+
+    function question_list(course_id, question_status) {
+
+        $('#questionTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            'destroy': true,
+            "ajax": {
+                "url": "ajax/question.php",
+                "data": {
+                    "act": "question_list",
+                    course_id,
+                    question_status
+                }
+            },
+            "lengthMenu": [25, 50, 75, 100],
+            "columns": [{
+                "data": "id"
+            }, {
+                "data": "question_name"
+            }, {
+                "data": "optionA"
+            }, {
+                "data": "optionB"
+            }, {
+                "data": "optionC"
+            }, {
+                "data": "optionD"
+            }, {
+                "data": "correct_option"
+            }, {
+                "data": "marks"
+            }, {
+                "data": "question_status",
+                "render": function(data, type, row, cell) {
+                    if(data == 'A') {
+                        return '<label class="badge bg-green">Active</label>';
+                    } else {
+                        return '<label class="badge bg-red">Inactive</label>';
+                    }
+                }
+            }],
+            "order": [0, 'desc'],
+            dom: 'lBfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'print'
+            ]
+        });
+    }
 
     bind_select2();
 

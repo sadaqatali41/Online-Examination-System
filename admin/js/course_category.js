@@ -38,6 +38,11 @@ $(function(){
                 }
             }
         }, {
+            "data": "tot_course",
+            render: function(data) {
+                return '<span class="badge bg-blue">'+ data +'</span>';
+            }
+        }, {
             "data": null,
             "render": function(data, type, row, cell) {
                 let manage = ''; 

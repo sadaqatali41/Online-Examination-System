@@ -51,6 +51,7 @@ $user_data = $_SESSION['user_data'];
                                             <th>Created By</th>
                                             <th>Updated By</th>
                                             <th>Status</th>
+                                            <th>Total Courses</th>
                                             <th>Manage</th>
                                         </tr>
                                     </thead>

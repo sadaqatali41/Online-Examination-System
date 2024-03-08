@@ -42,7 +42,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $totalRecordwithFilter = $totalRecords;
 
             ## Pagination query
-            $stmt2 = $conn->prepare("SELECT cc.*, al.name, alu.name AS u_name FROM course_category cc LEFT JOIN admin_login al ON al.id=cc.created_by LEFT JOIN admin_login alu ON alu.id=cc.updated_by WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
+            $stmt2 = $conn->prepare("SELECT cc.*, al.name, alu.name AS u_name, (SELECT COUNT(c.cc_id) FROM courses c WHERE c.cc_id=cc.id) AS tot_course FROM course_category cc LEFT JOIN admin_login al ON al.id=cc.created_by LEFT JOIN admin_login alu ON alu.id=cc.updated_by WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
             $stmt2->execute();
             $res2 = $stmt2->get_result();
             $row1 = array();
@@ -58,6 +58,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                         "created_by" => $row['name'],
                         "updated_by" => $row['u_name'],
                         "cc_status" => $row['cc_status'],
+                        "tot_course" => $row['tot_course'],
                     );
                 }
             }

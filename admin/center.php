@@ -67,6 +67,7 @@ $user_data = $_SESSION['user_data'];
                                             <th>City</th>
                                             <th>Address</th>
                                             <th>Status</th>
+                                            <th>Total Students</th>
                                             <th>Manage</th>
                                         </tr>
                                     </thead>

@@ -51,7 +51,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
             $totalRecordwithFilter = $totalRecords;
 
             ## Pagination query
-            $stmt2 = $conn->prepare("SELECT c.*, ct.name FROM centers c LEFT JOIN cities ct ON ct.id=c.center_city WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
+            $stmt2 = $conn->prepare("SELECT c.*, ct.name, (SELECT COUNT(s.center_id) FROM students s WHERE s.center_id=c.id) AS tot_student FROM centers c LEFT JOIN cities ct ON ct.id=c.center_city WHERE 1=1" . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT " . $numRow . ", " . $rowperpage . "");
             $stmt2->execute();
             $res2 = $stmt2->get_result();
             $row1 = array();
@@ -66,6 +66,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
                         "center_city" => $row['name'],
                         "center_address" => $row['center_address'],
                         "center_status" => $row['center_status'],
+                        "tot_student" => $row['tot_student'],
                     );
                 }
             }

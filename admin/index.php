@@ -132,7 +132,7 @@ $user_data = $_SESSION['user_data'];
                 <span class="info-box-number"><?= Dashboard::totalUsers($conn); ?></span>
               </div>
               <div class="info-button">
-                <a href="about_us" class="btn btn-primary btn-sm" target="_blank"><i class="fa fa-eye"></i></a>
+                <a href="users" class="btn btn-primary btn-sm" target="_blank"><i class="fa fa-eye"></i></a>
               </div>
             </div>
           </div>

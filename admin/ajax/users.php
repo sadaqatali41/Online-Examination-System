@@ -17,7 +17,7 @@ if (filter_has_var(INPUT_POST, 'act') && filter_input(INPUT_POST, 'act', FILTER_
 
     switch ($act) {
 
-        case "about_us_list":
+        case "user_list":
             $draw = filter_var($_POST['draw'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
             $numRow = filter_var($_POST['start'], FILTER_VALIDATE_INT);
             $rowperpage = filter_var($_POST['length'], FILTER_VALIDATE_INT); // Rows display per page

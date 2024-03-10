@@ -6,9 +6,9 @@ $(function(){
         'serverMethod': 'post',
         'destroy': true,
         "ajax": {
-            "url": "ajax/about_us.php",
+            "url": "ajax/users.php",
             "data": {
-                "act": "about_us_list"
+                "act": "user_list"
             }
         },
         "lengthMenu": [25, 50, 75, 100],
@@ -54,7 +54,7 @@ $(function(){
             "data": "profile_pic",
             "render": function(data) {
                 if(data !== null) {
-                    return '<a target="_blank" href="about-us/'+ data +'"><img src="about-us/'+ data +'" class="img-md img-circle"></a>';
+                    return '<a target="_blank" href="user/'+ data +'"><img src="user/'+ data +'" class="img-md img-circle"></a>';
                 }
                 else {
                     return 'N/A';

@@ -92,11 +92,11 @@
                     </li>                    
                 </ul>
             </li>
-            <!-- about us -->
+            <!-- users -->
             <li>
-                <a href="<?php print PROJECT_ROOT; ?>admin/about_us">
-                    <i class="fa fa-dashboard"></i>
-                    <span>About Us</span>
+                <a href="<?php print PROJECT_ROOT; ?>admin/users">
+                    <i class="fa fa-user-plus"></i>
+                    <span>Users</span>
                 </a>
             </li>
         </ul>

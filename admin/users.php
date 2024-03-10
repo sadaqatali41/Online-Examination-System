@@ -27,10 +27,10 @@ $user_data = $_SESSION['user_data'];
         default:
     ?>
             <section class="content-header">
-                <h1>About Us</h1>
+                <h1>User List</h1>
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">About Us</li>
+                    <li class="active">User List</li>
                 </ol>
             </section>
             <!-- main conter -->
@@ -67,5 +67,5 @@ $user_data = $_SESSION['user_data'];
     <?php  break; } ?>
 </div>
 <!-- /.content wrapper -->
-<?php define('CUSTOM_JS', 'js/about_us.js'); ?>
+<?php define('CUSTOM_JS', 'js/users.js'); ?>
 <?php include_once 'inc/footer.php'; ?>
